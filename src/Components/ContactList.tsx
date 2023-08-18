@@ -56,7 +56,8 @@ const ContactPagination = styled(ReactPaginate)`
   }
 `;
 
-const ContactList = ({ loading, error, data }: QueryResult) => {
+const ContactList = (contactQuery: QueryResult) => {
+  const { loading, error, data, refetch } = contactQuery;
   const favoriteStatus = useSelector(selectFavorites);
 
   const [currentPage, setCurrentPage] = useState(1);

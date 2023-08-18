@@ -6,7 +6,7 @@ import {Container} from "react-bootstrap";
 function App() {
   return (
     // <ContactListContainer />
-    <Container className="pt-2 pb-2">
+    <Container>
       <Routes>
         <Route path="/" element={<ContactListContainer />} />
       </Routes>

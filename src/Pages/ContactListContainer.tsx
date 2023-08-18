@@ -4,24 +4,30 @@ import { GetContactList } from "../GraphQL/queries";
 import { Row, Col } from "react-bootstrap";
 import ContactList from "../Components/ContactList";
 import styled from "@emotion/styled";
+import SearchBar from "../Components/SearchBar";
+import { css } from "@emotion/react";
 
-const SearchBar = styled.input`
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    padding: 10px;
-    width: 100%;
-    margin: 0 auto;
-    display: block;
-    box-sizing: border-box;
 
-    &:focus{
-        outline: none;
-        border: 2px solid #06BA63;
-    }
-`
 const RowWrapper = styled(Row)`
     margin-bottom: 10px;
+    flex-direction: column;
+    gap: 10px;
 `
+
+const SearchBarRow = styled(RowWrapper)`
+    background-color: #06BA63;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 0 0 10px 10px;
+`
+
+const AppTitle = styled.h1`
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+`
+
 export default function ContactListContainer() {
   const [searchTerm, setSearchTerm] = useState("");
   const contactQuery = useQuery(GetContactList, {
@@ -38,36 +44,36 @@ export default function ContactListContainer() {
                 _or: [
                   { first_name: { _ilike: `%${word}%` } },
                   { last_name: { _ilike: `%${word}%` } },
-                  { phones: { number: { _ilike: `%${word}%` } } },
                 ],
               })),
           },
         ],
       },
+      order_by:{
+        first_name: "asc",
+      }
     },
   });
+
   return (
     <>
-      <RowWrapper>
+      <SearchBarRow css={css`
+      background-color: black;
+      `}>
         <Col className="d-flex justify-content-center">
-          <SearchBar
-            type="text"
-            placeholder="Find by Name or Phone Number"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <AppTitle>
+            Contact KU
+          </AppTitle>
         </Col>
-      </RowWrapper>
+        <Col className="d-flex justify-content-center">
+          <SearchBar setSearchTerm={setSearchTerm} />
+        </Col>
+      </SearchBarRow>
       <RowWrapper>
         <Col>
           <ContactList {...contactQuery} />
         </Col>
       </RowWrapper>
-      {/* <RowWrapper>
-        <Col>
-          <ContactList {...contactQueryNonFavorite} isFavorite={false} />
-        </Col>
-      </RowWrapper> */}
     </>
   );
 }
