@@ -2,11 +2,9 @@ import React from "react";
 import { Contact } from "../Interfaces/Contact";
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faCircleInfo, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { addFavorite, removeFavorite } from "../redux/store";
 import { useDispatch } from "react-redux";
-import { DeleteContactById } from "../GraphQL/mutations";
-import { useMutation } from "@apollo/client";
 
 const ContactCardElement = styled.div`
   flex: 0 0 100%;
@@ -41,14 +39,15 @@ const ContactCardWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const ContactButtonWrapper = styled.div`
-  content: "";
+const ContactButtonWrapper = styled.div<{visible: boolean}>`
   flex: auto;
   width: 100%;
+  height: ${(props) => (props.visible ? "25px" : "0")};
+  visibility: ${(props) => (props.visible ? "visible" : "hidden")};
   border-top: 1px solid #ccc;
-  padding-top: 10px;
-  margin-top: 10px;
-  transition: height 5s ease;
+  padding-top: ${(props) => (props.visible ? "10px" : "0")};
+  margin-top: ${(props) => (props.visible ? "10px" : "0")};
+  transition: height .2s linear, padding .2s linear, margin .2s linear, visibility .1s linear;
   display: flex;
   justify-content: space-around;
 `;
@@ -66,6 +65,7 @@ const FavoriteIconWrapper = styled.div`
 
 interface ContactCardProps extends Contact {
   isFavorite: boolean;
+  handleClickDelete: (contactId: number, contactName: string) => void;
 }
 
 export default function ContactCard(contact: ContactCardProps) {
@@ -82,27 +82,28 @@ export default function ContactCard(contact: ContactCardProps) {
     }
   };
 
-  const [deleteContact] = useMutation(DeleteContactById);
+  // const [deleteContact] = useMutation(DeleteContactById);
 
-  const handleDeleteClick = (contactId: Number,isFavorite:boolean) => {
-    deleteContact({
-      variables: {
-        id: contactId,
-      },
-      update: (cache) => {
-        cache.evict({ id: `contact:${contactId}` });
-      }
-    });
-    if(isFavorite){
-      dispatch(removeFavorite(contactId));
-    }
-  };
+  // const handleDeleteClick = (contactId: Number, isFavorite: boolean) => {
+  //   deleteContact({
+  //     variables: {
+  //       id: contactId,
+  //     },
+  //     update: (cache) => {
+  //       cache.evict({ id: `contact:${contactId}` });
+  //     },
+  //   });
+  //   if (isFavorite) {
+  //     dispatch(removeFavorite(contactId));
+  //   }
+  // };
 
-  
   return (
-    <ContactCardElement onClick={() => {
-      setVisible(!visible);
-    }}>
+    <ContactCardElement
+      onClick={() => {
+        setVisible(!visible);
+      }}
+    >
       <ContactCardWrapper>
         <ContactInformationWrapper>
           <div>
@@ -127,11 +128,20 @@ export default function ContactCard(contact: ContactCardProps) {
           />
         </FavoriteIconWrapper>
       </ContactCardWrapper>
-      
-      {visible && (<ContactButtonWrapper>
-            <button className="">Edit</button>
-            <button className="" onClick={() => handleDeleteClick(contact.id,contact.isFavorite)}>Delete</button>
-      </ContactButtonWrapper>)}
+      <ContactButtonWrapper visible={visible}>
+            <FontAwesomeIcon
+              icon={faCircleInfo}
+              color={"grey"}
+            />
+            <FontAwesomeIcon
+            icon={faTrash}
+            color={"grey"}
+            onClick={() => {
+              contact.handleClickDelete(contact.id, `${contact.first_name} ${contact.last_name}`);
+            }}
+          />
+        </ContactButtonWrapper>
+        
     </ContactCardElement>
   );
 }

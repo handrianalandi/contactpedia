@@ -56,11 +56,16 @@ const ContactPagination = styled(ReactPaginate)`
   }
 `;
 
-const ContactList = (contactQuery: QueryResult) => {
-  const { loading, error, data, refetch } = contactQuery;
+interface ContactListProps extends QueryResult {
+  handleClickDelete: (contactId: number, contactName: string) => void;
+}
+
+const ContactList = (contactQuery: ContactListProps) => {
+  const { loading, error, data, handleClickDelete } = contactQuery;
   const favoriteStatus = useSelector(selectFavorites);
 
   const [currentPage, setCurrentPage] = useState(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [contactPerPage, setContactPerPage] = useState(9);
   const indexOfLastContact = currentPage * contactPerPage;
   const indexOfFirstContact = indexOfLastContact - contactPerPage;
@@ -87,7 +92,7 @@ const ContactList = (contactQuery: QueryResult) => {
       {favoriteContacts.length > 0 ? (
         <ContactWrapper>
           {favoriteContacts.map((contact: Contact) => (
-            <ContactCard key={contact.id} isFavorite {...contact}>
+            <ContactCard key={contact.id} isFavorite {...contact} handleClickDelete={handleClickDelete}>
               {contact.first_name} {contact.last_name}
               <br />
               {contact.phones.map((phone, index) => (
@@ -105,7 +110,7 @@ const ContactList = (contactQuery: QueryResult) => {
       {nonFavoriteContacts.length > 0 ? (
         <ContactWrapper>
           {currentContacts.map((contact: Contact) => (
-            <ContactCard key={contact.id} isFavorite={false} {...contact}>
+            <ContactCard key={contact.id} isFavorite={false} {...contact} handleClickDelete={handleClickDelete}>
               {contact.first_name} {contact.last_name}
               <br />
               {contact.phones.map((phone, index) => (
