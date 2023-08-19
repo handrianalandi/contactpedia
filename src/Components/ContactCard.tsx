@@ -2,7 +2,11 @@ import React from "react";
 import { Contact } from "../Interfaces/Contact";
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faCircleInfo, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faStar,
+  faCircleInfo,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { addFavorite, removeFavorite } from "../redux/store";
 import { useDispatch } from "react-redux";
 
@@ -39,7 +43,7 @@ const ContactCardWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const ContactButtonWrapper = styled.div<{visible: boolean}>`
+const ContactButtonWrapper = styled.div<{ visible: boolean }>`
   flex: auto;
   width: 100%;
   height: ${(props) => (props.visible ? "25px" : "0")};
@@ -47,7 +51,8 @@ const ContactButtonWrapper = styled.div<{visible: boolean}>`
   border-top: 1px solid #ccc;
   padding-top: ${(props) => (props.visible ? "10px" : "0")};
   margin-top: ${(props) => (props.visible ? "10px" : "0")};
-  transition: height .2s linear, padding .2s linear, margin .2s linear, visibility .1s linear;
+  transition: height 0.2s linear, padding 0.2s linear, margin 0.2s linear,
+    visibility 0.1s linear;
   display: flex;
   justify-content: space-around;
 `;
@@ -56,7 +61,7 @@ const ContactInformationWrapper = styled.div`
   flex: 0 0 90%;
 `;
 const FavoriteIconWrapper = styled.div`
-  z-index: 999;
+  z-index: 2;
   display: flex;
   justify-content: end;
   align-items: center;
@@ -99,13 +104,12 @@ export default function ContactCard(contact: ContactCardProps) {
   // };
 
   return (
-    <ContactCardElement
-      onClick={() => {
-        setVisible(!visible);
-      }}
-    >
+    <ContactCardElement>
       <ContactCardWrapper>
-        <ContactInformationWrapper>
+        <ContactInformationWrapper
+          onClick={() => {
+            setVisible(!visible);
+          }}>
           <div>
             <b>
               {contact.first_name} {contact.last_name}
@@ -129,19 +133,18 @@ export default function ContactCard(contact: ContactCardProps) {
         </FavoriteIconWrapper>
       </ContactCardWrapper>
       <ContactButtonWrapper visible={visible}>
-            <FontAwesomeIcon
-              icon={faCircleInfo}
-              color={"grey"}
-            />
-            <FontAwesomeIcon
-            icon={faTrash}
-            color={"grey"}
-            onClick={() => {
-              contact.handleClickDelete(contact.id, `${contact.first_name} ${contact.last_name}`);
-            }}
-          />
-        </ContactButtonWrapper>
-        
+        <FontAwesomeIcon icon={faCircleInfo} color={"grey"} />
+        <FontAwesomeIcon
+          icon={faTrash}
+          color={"grey"}
+          onClick={() => {
+            contact.handleClickDelete(
+              contact.id,
+              `${contact.first_name} ${contact.last_name}`
+            );
+          }}
+        />
+      </ContactButtonWrapper>
     </ContactCardElement>
   );
 }

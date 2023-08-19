@@ -89,8 +89,10 @@ const ContactList = (contactQuery: ContactListProps) => {
 
   return (
     <div>
+      Favorite
       {favoriteContacts.length > 0 ? (
         <ContactWrapper>
+          
           {favoriteContacts.map((contact: Contact) => (
             <ContactCard key={contact.id} isFavorite {...contact} handleClickDelete={handleClickDelete}>
               {contact.first_name} {contact.last_name}
@@ -107,8 +109,10 @@ const ContactList = (contactQuery: ContactListProps) => {
       ) : (
         <p>You have no favorite contact.</p>
       )}
+      Non-Favorite
       {nonFavoriteContacts.length > 0 ? (
         <ContactWrapper>
+          
           {currentContacts.map((contact: Contact) => (
             <ContactCard key={contact.id} isFavorite={false} {...contact} handleClickDelete={handleClickDelete}>
               {contact.first_name} {contact.last_name}

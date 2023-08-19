@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React from "react";
+import React, { ForwardedRef, forwardRef } from "react";
 import { Button, Modal as ModalElement } from "react-bootstrap";
 
 const ModalStyle = styled(ModalElement)`
@@ -22,9 +22,9 @@ const ModalStyle = styled(ModalElement)`
     margin: 0;
     max-height: 90vh;
 
-    & .modal-body{
-        max-height: 70vh;
-        overflow-y: auto;
+    & .modal-body {
+      max-height: 70vh;
+      overflow-y: auto;
     }
   }
 
@@ -36,6 +36,11 @@ const ModalStyle = styled(ModalElement)`
 
   & .modal-footer {
     border-top: none;
+    & .btn-primary {
+      background-color: #06ba63;
+      border: 1px solid #06ba63;
+      font-weight: 500;
+    }
   }
 
   & .modal-header {
@@ -91,7 +96,7 @@ export default function Modal({
         <Button variant="outline-secondary" onClick={onClose}>
           Close
         </Button>
-        <Button variant={confirmButtonType} onClick={onConfirm}>
+        <Button className="confirmBtn" variant={confirmButtonType} onClick={onConfirm}>
           {confirmText}
         </Button>
       </ModalElement.Footer>
