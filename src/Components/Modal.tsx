@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { ForwardedRef, forwardRef } from "react";
+import React from "react";
 import { Button, Modal as ModalElement } from "react-bootstrap";
 
 const ModalStyle = styled(ModalElement)`

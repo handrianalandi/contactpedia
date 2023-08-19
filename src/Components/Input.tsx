@@ -17,7 +17,7 @@ const InputComponent = styled.input`
 interface InputProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     value?: string;
-    placeholder: string;
+    placeholder?: string;
     type: string;
 }
 

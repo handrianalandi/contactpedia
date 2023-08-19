@@ -8,7 +8,7 @@ import SearchBar from "../Components/SearchBar";
 import { css } from "@emotion/react";
 import { AddContact, DeleteContactById } from "../GraphQL/mutations";
 import { useDispatch } from "react-redux";
-import { removeFavorite } from "../redux/store";
+import { addFavorite, removeFavorite } from "../redux/store";
 import Modal from "../Components/Modal";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,6 +21,7 @@ type FormValues = {
   phones: {
     number: string;
   }[];
+  favorite: boolean;
 };
 
 const RowWrapper = styled(Row)`
@@ -83,27 +84,35 @@ const AddPhoneButton = styled(Button)`
 
 const PhoneNumberDiv = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
 `
 
 const PhoneNumberInput = styled(Input)`
-  flex: 0 0 70%;
+  flex: 0 0 80%;
 `
 
 const PhoneNumberDeleteButton = styled(Button)`
-  flex: 0 0 10%;
+  flex: 0 0 20%;
   border: none;
   background-color: transparent;
   color: #06ba63;
   font-size: 1rem;
 `
 
+const AddToFavoriteCheckbox = styled.input`
+  flex: 0 0 10%;
+`
+
+const AddToFavoriteLabel = styled.label`
+  flex: 0 0 90%;
+`
+
 const RequiredWarningText = styled.span`
   color: red;
 `
-
 
 export default function ContactListContainer() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -149,6 +158,7 @@ export default function ContactListContainer() {
     defaultValues: {
       first_name: "",
       last_name: "",
+      favorite: false,
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -156,13 +166,14 @@ export default function ContactListContainer() {
     name: "phones",
   });
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [numberExists, setNumberExists] = useState(false);
   const onCloseAddModal = () => setIsOpenAddModal(false);
   const handleClickAdd = () => setIsOpenAddModal(true);
   const [addContact] = useMutation(AddContact, {
     refetchQueries: GET_QUERY,
   });
   const onSubmit = async (data: FormValues) => {
-    //erase all phone numbers that are empty
+    setNumberExists(false);
     data.phones = data.phones.filter((phone) => phone.number !== "");
     await addContact({
       variables: {
@@ -170,13 +181,23 @@ export default function ContactListContainer() {
         last_name: data.last_name,
         phones: data.phones,
       },
+      onCompleted: (response) => {
+        console.log({response})
+        if(data.favorite) {
+          dispatch(addFavorite(response.insert_contact.returning[0].id));
+        }
+        onCloseAddModal();
+        reset();
+      },
+      onError: (error) => {
+        //if error contains "duplicate key value violates unique constraint" then show error message
+        if(error.message.includes("duplicate key value violates unique constraint")) {
+          setNumberExists(true);
+        }
+      }
     });
-    onCloseAddModal();
-    reset();
+    
   };
-
-
-  
 
   const [deleteContact] = useMutation(DeleteContactById, {
     variables: {
@@ -245,14 +266,20 @@ export default function ContactListContainer() {
           <br/>
           <Input type="text" placeholder="Last Name" {...register("last_name")} />
           <br/>
+          <PhoneNumberDiv>
+            <AddToFavoriteLabel>Add to Favorite</AddToFavoriteLabel>
+            <AddToFavoriteCheckbox type="checkbox" {...register("favorite")} />
+          </PhoneNumberDiv>
+          <br/>
           {fields.map((field, index) => (
             <PhoneNumberDiv key={field.id}>
-              <PhoneNumberInput type="text" placeholder="Phone Number" {...register(`phones.${index}.number` as const)} />
+              <PhoneNumberInput type="number" placeholder="Phone Number" {...register(`phones.${index}.number` as const)} />
               <PhoneNumberDeleteButton variant="danger" onClick={() => remove(index)}>
                 Delete
               </PhoneNumberDeleteButton>
             </PhoneNumberDiv>
           ))}
+          {numberExists && <RequiredWarningText>One of the phone number already exists</RequiredWarningText>}
           <AddPhoneButton variant="primary" onClick={() => append({ number: "" })}>Add Phone Number</AddPhoneButton>
           
         </AddForm>
