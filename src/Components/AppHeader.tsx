@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const RowWrapper = styled(Row)`
   margin-bottom: 10px;
@@ -26,13 +29,46 @@ const AppTitle = styled.h1`
     font-style: italic;
 `;
 
+const BackButton = styled.button`
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+`
+
 interface AppHeaderProps {
     children?: React.ReactNode;
+    enableBackButton?: boolean;
+    backRoute?: string|undefined;
 }
 
-export default function AppHeader({children}: AppHeaderProps) {
+export default function AppHeader({children,enableBackButton=false,backRoute}: AppHeaderProps) {
+  const navigate = useNavigate();
+  const goBack = () => {
+    if (backRoute) {
+      navigate(backRoute);
+    } else {
+      navigate(-1);
+    }
+  }
   return (
     <AppHeaderRow>
+      {enableBackButton && (
+        <BackButton 
+          onClick={goBack}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </BackButton>
+      )}
       <Col className="d-flex justify-content-center">
         <AppTitle>Contactpedia</AppTitle>
       </Col>

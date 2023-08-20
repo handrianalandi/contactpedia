@@ -67,6 +67,7 @@ const AddPhoneButton = styled(Button)`
   color: #06ba63;
   font-size: 1rem;
   background-color: white !important;
+  margin-top: 10px;
 
   &:hover {
     background-color: #06ba63 !important;
@@ -78,13 +79,14 @@ const AddPhoneButton = styled(Button)`
 const PhoneNumberDiv = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
-  margin-bottom: 10px;
+  margin-top: 10px;
 `;
 
 const PhoneNumberInput = styled(Input)`
   flex: 0 0 80%;
+  margin: 0;
 `;
 
 const PhoneNumberDeleteButton = styled(Button)`
@@ -107,6 +109,7 @@ const AddToFavoriteButton = styled(BootstrapSwitchButton)`
 
 const RequiredWarningText = styled.span`
   color: red;
+  width: 100%;
 `;
 
 export default function ContactListContainer() {
@@ -161,6 +164,7 @@ export default function ContactListContainer() {
     defaultValues: {
       first_name: "",
       last_name: "",
+      phones: [{ number: "" }],
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -188,6 +192,7 @@ export default function ContactListContainer() {
         phones: data.phones,
       },
       onCompleted: (response) => {
+        console.log("completed");
         if (favorite) {
           dispatch(addFavorite(response.insert_contact.returning[0].id));
         }
@@ -289,19 +294,33 @@ export default function ContactListContainer() {
           </AddToFavoriteDiv>
           <br />
           {fields.map((field, index) => (
+            <>
             <PhoneNumberDiv key={field.id}>
               <PhoneNumberInput
                 type="number"
                 placeholder="Phone Number"
-                {...register(`phones.${index}.number` as const)}
+                {...register(`phones.${index}.number` as const, {
+                  required: true,
+                })}
               />
-              <PhoneNumberDeleteButton
-                variant="danger"
-                onClick={() => remove(index)}
-              >
-                Delete
-              </PhoneNumberDeleteButton>
+              {index > 0 && (
+                <PhoneNumberDeleteButton
+                  variant="danger"
+                  onClick={() => remove(index)}
+                >
+                  Delete
+                </PhoneNumberDeleteButton>
+              )}
+              
             </PhoneNumberDiv>
+            {errors.phones &&
+              errors.phones[index] &&
+              errors.phones[index]?.number && (
+                <RequiredWarningText>
+                  Phone Number is Required
+                </RequiredWarningText>
+              )}
+              </>
           ))}
           {numberExists && (
             <RequiredWarningText>
@@ -319,7 +338,6 @@ export default function ContactListContainer() {
       <FAB variant="primary" onClick={onOpenAddModal}>
         <FontAwesomeIcon icon={faPlus} />
       </FAB>
-      
     </>
   );
 }
