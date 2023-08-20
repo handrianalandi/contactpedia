@@ -41,17 +41,27 @@ const ContactPagination = styled(ReactPaginate)`
     border-radius: 10px;
     cursor: pointer;
 
-    & a {
-      text-decoration: none;
-      color: white;
+    &.disabled{
+      & a {
+        color: #ccc;
+      }
     }
 
-    &.previous,
-    &.next,
+    & a {
+      text-decoration: none;
+      color: black;
+    }
+
     &.selected {
       background-color: #06ba63;
       font-weight: 500;
       color: white;
+    }
+
+    &.previous, &.next{
+      border: none;
+      font-weight: 500;
+      background-color: transparent;
     }
   }
 `;
@@ -89,7 +99,7 @@ const ContactList = (contactQuery: ContactListProps) => {
 
   return (
     <div>
-      Favorite
+      <h5><b>Favorite</b></h5>
       {favoriteContacts.length > 0 ? (
         <ContactWrapper>
           
@@ -109,7 +119,7 @@ const ContactList = (contactQuery: ContactListProps) => {
       ) : (
         <p>You have no favorite contact.</p>
       )}
-      Non-Favorite
+      <h5><b>Regular</b></h5>
       {nonFavoriteContacts.length > 0 ? (
         <ContactWrapper>
           
@@ -135,6 +145,8 @@ const ContactList = (contactQuery: ContactListProps) => {
         pageRangeDisplayed={5}
         pageCount={Math.ceil(totalContacts / contactPerPage)}
         renderOnZeroPageCount={null}
+        previousLabel={"<"}
+        nextLabel={">"}
       />
     </div>
   );

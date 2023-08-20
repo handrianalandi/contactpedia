@@ -68,7 +68,8 @@ interface ModalProps {
   heading?: string;
   confirmText?: string;
   confirmButtonType?: "primary" | "danger";
-  onClose: () => void;
+  visibleCloseButton?: boolean;
+  onClose?: () => void;
   onConfirm?: () => void;
   children?: React.ReactNode;
 }
@@ -78,6 +79,7 @@ export default function Modal({
   heading,
   confirmText = "Confirm",
   confirmButtonType = "primary",
+  visibleCloseButton = false,
   onClose,
   onConfirm,
   children,
@@ -93,9 +95,11 @@ export default function Modal({
         {children}
     </ModalElement.Body>
       <ModalElement.Footer>
+        {visibleCloseButton && (
         <Button variant="outline-secondary" onClick={onClose}>
           Close
         </Button>
+        )}
         <Button className="confirmBtn" variant={confirmButtonType} onClick={onConfirm}>
           {confirmText}
         </Button>

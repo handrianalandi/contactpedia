@@ -2,6 +2,7 @@ import React from "react";
 import { Contact } from "../Interfaces/Contact";
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import {
   faStar,
   faCircleInfo,
@@ -10,22 +11,22 @@ import {
 import { addFavorite, removeFavorite } from "../redux/store";
 import { useDispatch } from "react-redux";
 
-const ContactCardElement = styled.div`
+const ContactCardElement = styled.div<{ visible: boolean }>`
   flex: 0 0 100%;
-  border: 1px solid #ccc;
+  border: ${(props) =>
+    props.visible ? "1px solid #06ba63" : "1px solid #ccc"};
   border-radius: 15px;
   padding: 10px;
   text-decoration: none;
   color: #000;
   display: flex;
   flex-wrap: wrap;
-  transition: 0.5s ease;
+  transition: 0.5s linear;
   cursor: pointer;
 
   &:hover {
     text-decoration: none;
-    border: 2px solid #06ba63;
-    transition: 0.5s ease;
+    transition: 0.5s linear;
   }
 
   @media (min-width: 768px) {
@@ -87,29 +88,19 @@ export default function ContactCard(contact: ContactCardProps) {
     }
   };
 
-  // const [deleteContact] = useMutation(DeleteContactById);
-
-  // const handleDeleteClick = (contactId: Number, isFavorite: boolean) => {
-  //   deleteContact({
-  //     variables: {
-  //       id: contactId,
-  //     },
-  //     update: (cache) => {
-  //       cache.evict({ id: `contact:${contactId}` });
-  //     },
-  //   });
-  //   if (isFavorite) {
-  //     dispatch(removeFavorite(contactId));
-  //   }
-  // };
+  const navigate = useNavigate();
+  const handleContactClick = () => {
+    navigate(`/${contact.id}`);
+  };
 
   return (
-    <ContactCardElement>
+    <ContactCardElement visible={visible}>
       <ContactCardWrapper>
         <ContactInformationWrapper
           onClick={() => {
             setVisible(!visible);
-          }}>
+          }}
+        >
           <div>
             <b>
               {contact.first_name} {contact.last_name}
@@ -133,7 +124,11 @@ export default function ContactCard(contact: ContactCardProps) {
         </FavoriteIconWrapper>
       </ContactCardWrapper>
       <ContactButtonWrapper visible={visible}>
-        <FontAwesomeIcon icon={faCircleInfo} color={"grey"} />
+        <FontAwesomeIcon 
+        icon={faCircleInfo} 
+        color={"grey"} 
+        onClick={handleContactClick}
+        />
         <FontAwesomeIcon
           icon={faTrash}
           color={"grey"}

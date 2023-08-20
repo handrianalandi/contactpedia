@@ -5,7 +5,6 @@ import { Row, Col, Button } from "react-bootstrap";
 import ContactList from "../Components/ContactList";
 import styled from "@emotion/styled";
 import SearchBar from "../Components/SearchBar";
-import { css } from "@emotion/react";
 import { AddContact, DeleteContactById } from "../GraphQL/mutations";
 import { useDispatch } from "react-redux";
 import { addFavorite, removeFavorite } from "../redux/store";
@@ -14,6 +13,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForm, useFieldArray } from "react-hook-form";
 import Input from "../Components/Input";
+import BootstrapSwitchButton from "bootstrap-switch-button-react";
+import AppHeader from "../Components/AppHeader";
 
 type FormValues = {
   first_name: string;
@@ -28,20 +29,6 @@ const RowWrapper = styled(Row)`
   margin-bottom: 10px;
   flex-direction: column;
   gap: 10px;
-`;
-
-const SearchBarRow = styled(RowWrapper)`
-  background-color: #06ba63;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 0 0 10px 10px;
-`;
-
-const AppTitle = styled.h1`
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
 `;
 
 const FAB = styled(Button)`
@@ -60,7 +47,13 @@ const FAB = styled(Button)`
   align-items: center;
   margin: 0;
   padding: 0;
-`
+
+  &:hover,
+  &:active {
+    background-color: #06ba63 !important;
+    color: white;
+  }
+`;
 
 const AddForm = styled.form`
   display: flex;
@@ -73,14 +66,14 @@ const AddPhoneButton = styled(Button)`
   border-radius: 15px;
   color: #06ba63;
   font-size: 1rem;
-  background-color: white;
+  background-color: white !important;
 
   &:hover {
-    background-color: #06ba63;
+    background-color: #06ba63 !important;
     color: white;
     border: 1px solid #06ba63;
   }
-`
+`;
 
 const PhoneNumberDiv = styled.div`
   display: flex;
@@ -88,11 +81,11 @@ const PhoneNumberDiv = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
-`
+`;
 
 const PhoneNumberInput = styled(Input)`
   flex: 0 0 80%;
-`
+`;
 
 const PhoneNumberDeleteButton = styled(Button)`
   flex: 0 0 20%;
@@ -100,25 +93,27 @@ const PhoneNumberDeleteButton = styled(Button)`
   background-color: transparent;
   color: #06ba63;
   font-size: 1rem;
-`
+`;
 
-const AddToFavoriteCheckbox = styled.input`
-  flex: 0 0 10%;
-`
+const AddToFavoriteDiv = styled(PhoneNumberDiv)`
+  justify-content: end;
+`;
 
-const AddToFavoriteLabel = styled.label`
-  flex: 0 0 90%;
-`
+const AddToFavoriteButton = styled(BootstrapSwitchButton)`
+  & .switch-on.btn {
+    background-color: red;
+  }
+`;
 
 const RequiredWarningText = styled.span`
   color: red;
-`
+`;
 
 export default function ContactListContainer() {
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
 
-  const GET_QUERY = [
+  const GET_CONTACT_QUERY = [
     {
       query: GetContactList,
       variables: {
@@ -145,8 +140,10 @@ export default function ContactListContainer() {
   ];
 
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  const [deleteContactId, setDeleteContactId] = useState<number | null>(null); 
-  const [deleteContactName, setDeleteContactName] = useState<string | null>(null);
+  const [deleteContactId, setDeleteContactId] = useState<number | null>(null);
+  const [deleteContactName, setDeleteContactName] = useState<string | null>(
+    null
+  );
   const onCloseDeleteModal = () => setIsOpenDeleteModal(false);
   const handleClickDelete = (contactId: number, contactName: string) => {
     setDeleteContactId(contactId);
@@ -154,27 +151,36 @@ export default function ContactListContainer() {
     setIsOpenDeleteModal(true);
   };
 
-  const { register, control, handleSubmit, reset, formState:{ errors } } = useForm<FormValues>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
     defaultValues: {
       first_name: "",
       last_name: "",
-      favorite: false,
     },
   });
   const { fields, append, remove } = useFieldArray({
     control,
     name: "phones",
   });
+  const [isFavorite, setIsFavorite] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [numberExists, setNumberExists] = useState(false);
   const onCloseAddModal = () => setIsOpenAddModal(false);
-  const handleClickAdd = () => setIsOpenAddModal(true);
+  const onOpenAddModal = () => setIsOpenAddModal(true);
   const [addContact] = useMutation(AddContact, {
-    refetchQueries: GET_QUERY,
+    refetchQueries: GET_CONTACT_QUERY,
   });
-  const onSubmit = async (data: FormValues) => {
+  const onSubmitNewContact = async (data: FormValues) => {
+    let favorite = isFavorite;
     setNumberExists(false);
-    data.phones = data.phones.filter((phone) => phone.number !== "");
+    if (data.phones && Array.isArray(data.phones)) {
+      data.phones = data.phones.filter((phone) => phone.number !== "");
+    }
     await addContact({
       variables: {
         first_name: data.first_name,
@@ -182,28 +188,30 @@ export default function ContactListContainer() {
         phones: data.phones,
       },
       onCompleted: (response) => {
-        console.log({response})
-        if(data.favorite) {
+        if (favorite) {
           dispatch(addFavorite(response.insert_contact.returning[0].id));
         }
         onCloseAddModal();
         reset();
       },
       onError: (error) => {
-        //if error contains "duplicate key value violates unique constraint" then show error message
-        if(error.message.includes("duplicate key value violates unique constraint")) {
+        if (
+          error.message.includes(
+            "duplicate key value violates unique constraint"
+          )
+        ) {
           setNumberExists(true);
         }
-      }
+      },
     });
-    
+    setIsFavorite(false);
   };
 
   const [deleteContact] = useMutation(DeleteContactById, {
     variables: {
       id: deleteContactId,
     },
-    refetchQueries: GET_QUERY,
+    refetchQueries: GET_CONTACT_QUERY,
     update: (cache) => {
       cache.evict({ id: `contact:${deleteContactId}` });
     },
@@ -215,30 +223,23 @@ export default function ContactListContainer() {
     onCloseDeleteModal();
   };
 
-  const contactQuery = useQuery(GET_QUERY[0].query, {
-    variables: GET_QUERY[0].variables,
+  const contactQuery = useQuery(GET_CONTACT_QUERY[0].query, {
+    variables: GET_CONTACT_QUERY[0].variables,
   });
 
   return (
     <>
-      <SearchBarRow
-        css={css`
-          background-color: black;
-        `}
-      >
-        <Col className="d-flex justify-content-center">
-          <AppTitle>Contact KU</AppTitle>
-        </Col>
-        <Col className="d-flex justify-content-center">
-          <SearchBar setSearchTerm={setSearchTerm} />
-        </Col>
-      </SearchBarRow>
+      <AppHeader>
+        <SearchBar setSearchTerm={setSearchTerm} />
+      </AppHeader>
       <RowWrapper>
         <Col>
-          <ContactList {...contactQuery} handleClickDelete={handleClickDelete}/>
+          <ContactList
+            {...contactQuery}
+            handleClickDelete={handleClickDelete}
+          />
         </Col>
       </RowWrapper>
-      {/* delete modal */}
       <Modal
         isOpen={isOpenDeleteModal}
         onClose={onCloseDeleteModal}
@@ -247,50 +248,78 @@ export default function ContactListContainer() {
         confirmText="Delete"
         confirmButtonType="danger"
       >
-        <p>Are you sure you want to delete {deleteContactName}?</p><br/>
+        <p>Are you sure you want to delete {deleteContactName}?</p>
+        <br />
       </Modal>
 
-      {/* add modal */}
       <Modal
         isOpen={isOpenAddModal}
         onClose={onCloseAddModal}
         heading="Add Contact"
         confirmText="Add"
         confirmButtonType="primary"
-        onConfirm={handleSubmit(onSubmit)}
-        
+        onConfirm={handleSubmit(onSubmitNewContact)}
       >
-        <AddForm onSubmit={handleSubmit(onSubmit)}>
-          <Input type="text" placeholder="First Name" {...register("first_name", {required: true})} />
-          {errors.first_name && errors.first_name.type === "required" && <RequiredWarningText>First Name is Required</RequiredWarningText>}
-          <br/>
-          <Input type="text" placeholder="Last Name" {...register("last_name")} />
-          <br/>
-          <PhoneNumberDiv>
-            <AddToFavoriteLabel>Add to Favorite</AddToFavoriteLabel>
-            <AddToFavoriteCheckbox type="checkbox" {...register("favorite")} />
-          </PhoneNumberDiv>
-          <br/>
+        <AddForm>
+          <Input
+            type="text"
+            placeholder="First Name*"
+            {...register("first_name", { required: true })}
+          />
+          {errors.first_name && errors.first_name.type === "required" && (
+            <RequiredWarningText>First Name is Required</RequiredWarningText>
+          )}
+          <br />
+          <Input
+            type="text"
+            placeholder="Last Name"
+            {...register("last_name")}
+          />
+          <br />
+          <AddToFavoriteDiv>
+            <AddToFavoriteButton
+              checked={isFavorite}
+              onlabel="Favorite"
+              offlabel="Regular"
+              width={125}
+              onChange={(checked: boolean) => {
+                setIsFavorite(checked);
+              }}
+            />
+          </AddToFavoriteDiv>
+          <br />
           {fields.map((field, index) => (
             <PhoneNumberDiv key={field.id}>
-              <PhoneNumberInput type="number" placeholder="Phone Number" {...register(`phones.${index}.number` as const)} />
-              <PhoneNumberDeleteButton variant="danger" onClick={() => remove(index)}>
+              <PhoneNumberInput
+                type="number"
+                placeholder="Phone Number"
+                {...register(`phones.${index}.number` as const)}
+              />
+              <PhoneNumberDeleteButton
+                variant="danger"
+                onClick={() => remove(index)}
+              >
                 Delete
               </PhoneNumberDeleteButton>
             </PhoneNumberDiv>
           ))}
-          {numberExists && <RequiredWarningText>One of the phone number already exists</RequiredWarningText>}
-          <AddPhoneButton variant="primary" onClick={() => append({ number: "" })}>Add Phone Number</AddPhoneButton>
-          
+          {numberExists && (
+            <RequiredWarningText>
+              One of the phone number already exists
+            </RequiredWarningText>
+          )}
+          <AddPhoneButton
+            variant="primary"
+            onClick={() => append({ number: "" })}
+          >
+            Add Phone Number
+          </AddPhoneButton>
         </AddForm>
       </Modal>
-
-      <FAB 
-      variant="primary"
-      onClick={handleClickAdd}
-      >
+      <FAB variant="primary" onClick={onOpenAddModal}>
         <FontAwesomeIcon icon={faPlus} />
       </FAB>
+      
     </>
   );
 }
