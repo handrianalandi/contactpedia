@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import React from "react";
-import { Button, Modal as ModalElement } from "react-bootstrap";
+import { Modal as ModalElement } from "react-bootstrap";
+import Button from "./Button";
 
 const ModalStyle = styled(ModalElement)`
   @keyframes slideInFromBottom {
@@ -71,6 +72,7 @@ interface ModalProps {
   visibleCloseButton?: boolean;
   onClose?: () => void;
   onConfirm?: () => void;
+  isLoading?: boolean;
   children?: React.ReactNode;
 }
 
@@ -80,6 +82,7 @@ export default function Modal({
   confirmText = "Confirm",
   confirmButtonType = "primary",
   visibleCloseButton = false,
+  isLoading = false,
   onClose,
   onConfirm,
   children,
@@ -100,7 +103,11 @@ export default function Modal({
           Close
         </Button>
         )}
-        <Button className="confirmBtn" variant={confirmButtonType} onClick={onConfirm}>
+        <Button 
+        variant={confirmButtonType}
+        onClick={onConfirm}
+        isLoading={isLoading}
+        >
           {confirmText}
         </Button>
       </ModalElement.Footer>

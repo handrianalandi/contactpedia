@@ -98,13 +98,20 @@ const PhoneNumberDeleteButton = styled(Button)`
 `;
 
 const AddToFavoriteDiv = styled(PhoneNumberDiv)`
-  justify-content: end;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 `;
 
 const AddToFavoriteButton = styled(BootstrapSwitchButton)`
   & .switch-on.btn {
     background-color: red;
   }
+`;
+
+const AddToFavoriteText = styled.span`
+  color: #ccc;
+  font-size: 0.8rem;
 `;
 
 const RequiredWarningText = styled.span`
@@ -147,6 +154,7 @@ export default function ContactListContainer() {
   const [deleteContactName, setDeleteContactName] = useState<string | null>(
     null
   );
+  const [isDeleting, setIsDeleting] = useState(false);
   const onCloseDeleteModal = () => setIsOpenDeleteModal(false);
   const handleClickDelete = (contactId: number, contactName: string) => {
     setDeleteContactId(contactId);
@@ -174,12 +182,15 @@ export default function ContactListContainer() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [numberExists, setNumberExists] = useState(false);
+  const [isAddingNewContact, setIsAddingNewContact] = useState(false);
   const onCloseAddModal = () => setIsOpenAddModal(false);
   const onOpenAddModal = () => setIsOpenAddModal(true);
   const [addContact] = useMutation(AddContact, {
     refetchQueries: GET_CONTACT_QUERY,
   });
+
   const onSubmitNewContact = async (data: FormValues) => {
+    setIsAddingNewContact(true);
     let favorite = isFavorite;
     setNumberExists(false);
     if (data.phones && Array.isArray(data.phones)) {
@@ -210,6 +221,7 @@ export default function ContactListContainer() {
       },
     });
     setIsFavorite(false);
+    setIsAddingNewContact(false);
   };
 
   const [deleteContact] = useMutation(DeleteContactById, {
@@ -222,10 +234,12 @@ export default function ContactListContainer() {
     },
   });
 
-  const handleConfirmDelete = () => {
-    deleteContact();
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    await deleteContact();
     dispatch(removeFavorite(deleteContactId));
     onCloseDeleteModal();
+    setIsDeleting(false);
   };
 
   const contactQuery = useQuery(GET_CONTACT_QUERY[0].query, {
@@ -252,6 +266,7 @@ export default function ContactListContainer() {
         onConfirm={handleConfirmDelete}
         confirmText="Delete"
         confirmButtonType="danger"
+        isLoading={isDeleting}
       >
         <p>Are you sure you want to delete {deleteContactName}?</p>
         <br />
@@ -264,12 +279,15 @@ export default function ContactListContainer() {
         confirmText="Add"
         confirmButtonType="primary"
         onConfirm={handleSubmit(onSubmitNewContact)}
+        isLoading={isAddingNewContact}
       >
         <AddForm>
           <Input
             type="text"
-            placeholder="First Name*"
+            placeholder="First Name"
+            disabled={isAddingNewContact}
             {...register("first_name", { required: true })}
+            isRequired
           />
           {errors.first_name && errors.first_name.type === "required" && (
             <RequiredWarningText>First Name is Required</RequiredWarningText>
@@ -278,6 +296,7 @@ export default function ContactListContainer() {
           <Input
             type="text"
             placeholder="Last Name"
+            disabled={isAddingNewContact}
             {...register("last_name")}
           />
           <br />
@@ -287,40 +306,44 @@ export default function ContactListContainer() {
               onlabel="Favorite"
               offlabel="Regular"
               width={125}
+              disabled={isAddingNewContact}
               onChange={(checked: boolean) => {
                 setIsFavorite(checked);
               }}
             />
+            <AddToFavoriteText>*Click to add to favorite</AddToFavoriteText>
           </AddToFavoriteDiv>
           <br />
           {fields.map((field, index) => (
             <>
-            <PhoneNumberDiv key={field.id}>
-              <PhoneNumberInput
-                type="number"
-                placeholder="Phone Number"
-                {...register(`phones.${index}.number` as const, {
-                  required: true,
-                })}
-              />
-              {index > 0 && (
-                <PhoneNumberDeleteButton
-                  variant="danger"
-                  onClick={() => remove(index)}
-                >
-                  Delete
-                </PhoneNumberDeleteButton>
-              )}
-              
-            </PhoneNumberDiv>
-            {errors.phones &&
-              errors.phones[index] &&
-              errors.phones[index]?.number && (
-                <RequiredWarningText>
-                  Phone Number is Required
-                </RequiredWarningText>
-              )}
-              </>
+              <PhoneNumberDiv key={field.id}>
+                <PhoneNumberInput
+                  type="number"
+                  disabled={isAddingNewContact}
+                  placeholder="Phone Number"
+                  {...register(`phones.${index}.number` as const, {
+                    required: true,
+                  })}
+                  isRequired
+                />
+                {index > 0 && (
+                  <PhoneNumberDeleteButton
+                    variant="danger"
+                    disabled={isAddingNewContact}
+                    onClick={() => remove(index)}
+                  >
+                    Delete
+                  </PhoneNumberDeleteButton>
+                )}
+              </PhoneNumberDiv>
+              {errors.phones &&
+                errors.phones[index] &&
+                errors.phones[index]?.number && (
+                  <RequiredWarningText>
+                    Phone Number is Required
+                  </RequiredWarningText>
+                )}
+            </>
           ))}
           {numberExists && (
             <RequiredWarningText>
@@ -329,6 +352,7 @@ export default function ContactListContainer() {
           )}
           <AddPhoneButton
             variant="primary"
+            disabled={isAddingNewContact}
             onClick={() => append({ number: "" })}
           >
             Add Phone Number

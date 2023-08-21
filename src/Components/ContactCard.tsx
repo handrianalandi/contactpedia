@@ -4,17 +4,17 @@ import styled from "@emotion/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import {
-  faStar,
   faCircleInfo,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { addFavorite, removeFavorite } from "../redux/store";
-import { useDispatch } from "react-redux";
+import ContactFavoriteStar from "./ContactFavoriteStar";
 
-const ContactCardElement = styled.div<{ visible: boolean }>`
+const ContactCardElement = styled.div<{ visible: boolean, favorite: boolean }>`
   flex: 0 0 100%;
   border: ${(props) =>
     props.visible ? "1px solid #06ba63" : "1px solid #ccc"};
+  border-top: ${(props) =>
+    props.favorite ? "5px solid #06ba63" : props.visible?"1px solid #06ba63" : "1px solid #ccc"};
   border-radius: 15px;
   padding: 10px;
   text-decoration: none;
@@ -76,17 +76,6 @@ interface ContactCardProps extends Contact {
 
 export default function ContactCard(contact: ContactCardProps) {
   const [visible, setVisible] = React.useState(false);
-  const dispatch = useDispatch();
-  const handleStarClick = (
-    event: React.MouseEvent<SVGSVGElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    if (contact.isFavorite) {
-      dispatch(removeFavorite(contact.id));
-    } else {
-      dispatch(addFavorite(contact.id));
-    }
-  };
 
   const navigate = useNavigate();
   const handleContactClick = () => {
@@ -94,7 +83,7 @@ export default function ContactCard(contact: ContactCardProps) {
   };
 
   return (
-    <ContactCardElement visible={visible}>
+    <ContactCardElement visible={visible} favorite={contact.isFavorite}>
       <ContactCardWrapper>
         <ContactInformationWrapper
           onClick={() => {
@@ -116,10 +105,9 @@ export default function ContactCard(contact: ContactCardProps) {
           </div>
         </ContactInformationWrapper>
         <FavoriteIconWrapper>
-          <FontAwesomeIcon
-            icon={faStar}
-            color={contact.isFavorite ? "orange" : "lightgrey"}
-            onClick={handleStarClick}
+          <ContactFavoriteStar
+            isFavorite={contact.isFavorite}
+            contactId={contact.id}
           />
         </FavoriteIconWrapper>
       </ContactCardWrapper>

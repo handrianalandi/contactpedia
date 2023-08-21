@@ -39,10 +39,10 @@ const BackButton = styled.button`
   padding: 0;
   cursor: pointer;
   position: absolute;
-  left: 10px;
-  top: 10px;
-  width: 50px;
-  height: 50px;
+  left: 20px;
+  top: 15px;
+  width: 25px;
+  height: 25px;
 `
 
 interface AppHeaderProps {
@@ -72,9 +72,12 @@ export default function AppHeader({children,enableBackButton=false,backRoute}: A
       <Col className="d-flex justify-content-center">
         <AppTitle>Contactpedia</AppTitle>
       </Col>
-      <Col className="d-flex justify-content-center">
+      {children && (
+        <Col className="d-flex justify-content-center">
         {children}
       </Col>
+      )}
+      
     </AppHeaderRow>
   );
 }

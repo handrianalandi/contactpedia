@@ -18,14 +18,15 @@ interface InputProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     value?: string;
     placeholder?: string;
+    isRequired?: boolean;
     type: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-    ({ onChange, placeholder, ...restProps }, ref) => (
+    ({ onChange, placeholder,isRequired=false, ...restProps }, ref) => (
         <InputComponent
             ref={ref}
-            placeholder={placeholder}
+            placeholder={isRequired?`${placeholder}*`:placeholder}
             onChange={onChange}
             {...restProps}
         />
