@@ -19,12 +19,14 @@ import Button from "../Components/Button";
 import { useFieldArray, useForm } from "react-hook-form";
 import Input from "../Components/Input";
 import Modal from "../Components/Modal";
+import Preloader from "../Components/Preloader";
+import ErrorPage from "../Components/ErrorPage";
 
 type FormValues = {
   first_name: string;
   last_name: string;
   phones: {
-    number: string;
+    number: number|null;
   }[];
   favorite: boolean;
 };
@@ -113,7 +115,7 @@ const SaveContactButton = styled(Button)`
 
 export default function ContactDetailContainer() {
   const location = useLocation();
-  const contactId = location.pathname.split("/")[1];
+  const contactId = location.pathname.split("/")[2];
 
   const favoriteStatus = useSelector(selectFavorites);
   const isFavorite = favoriteStatus.includes(parseInt(contactId));
@@ -200,8 +202,8 @@ export default function ContactDetailContainer() {
       phones.forEach((phone, index) => {
         //clear phones
         remove(index);
-        append({ number: "" });
-        setValue(`phones.${index}.number`, phone.number);
+        append({ number: null });
+        setValue(`phones.${index}.number`, parseInt(phone.number));
         setOriginalPhones((originalPhones) => [
           ...originalPhones,
           phone.number,
@@ -210,8 +212,8 @@ export default function ContactDetailContainer() {
     }
   }, [loading, error, data, setValue, remove, append]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Oopsie! Fail to load the contact.</p>;
+  if (loading) return <><AppHeader /><Preloader /></>;
+  if (error) return <><AppHeader /><ErrorPage /></>;
 
   if (!data.contact_by_pk) {
     navigate("/");
@@ -271,7 +273,7 @@ export default function ContactDetailContainer() {
     }
     const updatePhones = phones
       .map((phone, index) => {
-        if (phone.number === originalPhones[index]) {
+        if (phone.number?.toString() === originalPhones[index]) {
           return null;
         }
         return {
@@ -402,7 +404,7 @@ export default function ContactDetailContainer() {
                   <RedStar>*</RedStar>
                 </SingleInformationLabel>
                 <Input
-                  type="text"
+                  type="number"
                   disabled={isSaving}
                   placeholder="Phone Number"
                   {...register(`phones.${index}.number` as const, {
@@ -421,7 +423,7 @@ export default function ContactDetailContainer() {
           ))}
           <Col>
             <AddPhoneButton variant="primary" onClick={onOpenAddPhone}>
-              Add Phone Number
+              Add Phone Number +
             </AddPhoneButton>
           </Col>
         </Row>

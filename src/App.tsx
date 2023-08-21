@@ -9,7 +9,7 @@ function App() {
     <Container>
       <Routes>
         <Route path="/" element={<ContactListContainer />} />
-        <Route path="/:id" element={<ContactDetailContainer />} />
+        <Route path="/contact/:id" element={<ContactDetailContainer />} />
       </Routes>
     </Container>
   );

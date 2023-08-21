@@ -2,7 +2,7 @@ import React from "react";
 import { Contact } from "../Interfaces/Contact";
 import styled from "@emotion/styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   faCircleInfo,
   faTrash,
@@ -69,6 +69,10 @@ const FavoriteIconWrapper = styled.div`
   flex: 0 0 10%;
 `;
 
+const PhoneLink = styled(Link)`
+  color: green;
+`
+
 interface ContactCardProps extends Contact {
   isFavorite: boolean;
   handleClickDelete: (contactId: number, contactName: string) => void;
@@ -79,7 +83,7 @@ export default function ContactCard(contact: ContactCardProps) {
 
   const navigate = useNavigate();
   const handleContactClick = () => {
-    navigate(`/${contact.id}`);
+    navigate(`/contact/${contact.id}`);
   };
 
   return (
@@ -98,7 +102,7 @@ export default function ContactCard(contact: ContactCardProps) {
           <div>
             {contact.phones.map((phone, index) => (
               <span key={index}>
-                Phone {index + 1}: {phone.number}
+                Phone {index + 1}: <PhoneLink target="_blank" rel="noopener noreferrer" to={`https://wa.me/${phone.number}`}>{phone.number}</PhoneLink>
                 <br />
               </span>
             ))}

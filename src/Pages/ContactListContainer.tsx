@@ -1,5 +1,5 @@
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GetContactList } from "../GraphQL/queries";
 import { Row, Col, Button } from "react-bootstrap";
 import ContactList from "../Components/ContactList";
@@ -11,7 +11,7 @@ import { addFavorite, removeFavorite } from "../redux/store";
 import Modal from "../Components/Modal";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useForm, useFieldArray, FieldErrors } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import Input from "../Components/Input";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import AppHeader from "../Components/AppHeader";
@@ -76,6 +76,22 @@ const AddPhoneButton = styled(Button)`
   }
 `;
 
+const SingleInformationWrapper = styled.div`
+  flex: 0 0 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+`;
+
+const SingleInformationLabel = styled.label`
+  color: #757575;
+  font-size: 0.8rem;
+`;
+
+const RedStar = styled.span`
+  color: red;
+`;
+
 const PhoneNumberDiv = styled.div`
   display: flex;
   flex-direction: row;
@@ -95,6 +111,12 @@ const PhoneNumberDeleteButton = styled(Button)`
   background-color: transparent;
   color: #06ba63;
   font-size: 1rem;
+
+  &:hover, &:active {
+    background-color:transparent !important;
+    color: #06ba63 !important;
+  }
+
 `;
 
 const AddToFavoriteDiv = styled(PhoneNumberDiv)`
@@ -202,7 +224,7 @@ export default function ContactListContainer() {
     if (data.phones && Array.isArray(data.phones)) {
       data.phones = data.phones.filter((phone) => phone.number !== "");
     }
-    
+
     const { data: contactData } = await client.query({
       query: GetContactList,
       variables: {
@@ -228,7 +250,6 @@ export default function ContactListContainer() {
         phones: data.phones,
       },
       onCompleted: (response) => {
-        console.log("completed");
         if (favorite) {
           dispatch(addFavorite(response.insert_contact.returning[0].id));
         }
@@ -271,10 +292,6 @@ export default function ContactListContainer() {
     variables: GET_CONTACT_QUERY[0].variables,
   });
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
   return (
     <>
       <AppHeader>
@@ -311,33 +328,42 @@ export default function ContactListContainer() {
         isLoading={isAddingNewContact}
       >
         <AddForm>
-          <Input
+          <SingleInformationWrapper>
+            <SingleInformationLabel>
+              First Name<RedStar>*</RedStar>
+            </SingleInformationLabel>
+            <Input
+              type="text"
+              placeholder="Ex: John"
+              disabled={isAddingNewContact}
+              {...register("first_name", {
+                required: true,
+                pattern: {
+                  value: nameRegex,
+                  message: "First Name should contain only letter and number",
+                },
+              })}
+            />
+            {errors.first_name && errors.first_name.type === "required" ? (
+              <RequiredWarningText>First Name is Required</RequiredWarningText>
+            ) : (
+              <RequiredWarningText>
+                {errors.first_name?.message}
+              </RequiredWarningText>
+            )}
+            {nameExists && (
+              <RequiredWarningText>
+                Contact named "{existedName}" already exists
+              </RequiredWarningText>
+            )}
+          </SingleInformationWrapper>
+          <SingleInformationWrapper>
+            <SingleInformationLabel>
+              Last Name
+            </SingleInformationLabel>
+            <Input
             type="text"
-            placeholder="First Name"
-            disabled={isAddingNewContact}
-            {...register("first_name", {
-              required: true,
-              pattern: {
-                value: nameRegex,
-                message: "First Name should contain only letter and number",
-              },
-            })}
-            isRequired
-          />
-          {errors.first_name && errors.first_name.type === "required" ? (
-            <RequiredWarningText>First Name is Required</RequiredWarningText>
-          ) : (
-            <RequiredWarningText>
-              {errors.first_name?.message}
-            </RequiredWarningText>
-          )}
-          {nameExists && (
-            <RequiredWarningText>Contact named "{existedName}" already exists</RequiredWarningText>
-          )}
-          <br />
-          <Input
-            type="text"
-            placeholder="Last Name"
+            placeholder="Ex: Doe"
             disabled={isAddingNewContact}
             {...register("last_name", {
               pattern: {
@@ -352,9 +378,11 @@ export default function ContactListContainer() {
             </RequiredWarningText>
           )}
           {nameExists && (
-            <RequiredWarningText>Contact named "{existedName}" already exists</RequiredWarningText>
+            <RequiredWarningText>
+              Contact named "{existedName}" already exists
+            </RequiredWarningText>
           )}
-          <br />
+          </SingleInformationWrapper>
           <AddToFavoriteDiv>
             <AddToFavoriteButton
               checked={isFavorite}
@@ -368,18 +396,19 @@ export default function ContactListContainer() {
             />
             <AddToFavoriteText>*Click to add to favorite</AddToFavoriteText>
           </AddToFavoriteDiv>
-          <br />
           {fields.map((field, index) => (
-            <>
-              <PhoneNumberDiv key={field.id}>
+              <SingleInformationWrapper key={field.id}>
+                <SingleInformationLabel>
+                  Phone Number {index + 1}<RedStar>*</RedStar>
+                </SingleInformationLabel>
+                <PhoneNumberDiv>
                 <PhoneNumberInput
                   type="number"
                   disabled={isAddingNewContact}
-                  placeholder="Phone Number"
+                  placeholder="Ex: 628123456789"
                   {...register(`phones.${index}.number` as const, {
                     required: true,
                   })}
-                  isRequired
                 />
                 {index > 0 && (
                   <PhoneNumberDeleteButton
@@ -398,7 +427,7 @@ export default function ContactListContainer() {
                     Phone Number is Required
                   </RequiredWarningText>
                 )}
-            </>
+              </SingleInformationWrapper>
           ))}
           {numberExists && (
             <RequiredWarningText>
@@ -410,7 +439,7 @@ export default function ContactListContainer() {
             disabled={isAddingNewContact}
             onClick={() => append({ number: "" })}
           >
-            Add Phone Number
+            Add Phone Number +
           </AddPhoneButton>
         </AddForm>
       </Modal>

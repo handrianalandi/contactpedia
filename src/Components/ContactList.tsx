@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { selectFavorites } from "../redux/store";
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
+import Preloader from "./Preloader";
+import ErrorPage from "./ErrorPage";
 
 const ContactWrapper = styled.div`
   list-style: none;
@@ -85,8 +87,8 @@ const ContactList = (contactQuery: ContactListProps) => {
   const indexOfLastContact = currentPage * contactPerPage;
   const indexOfFirstContact = indexOfLastContact - contactPerPage;
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Oopsie! Fail to load the contact.</p>;
+  if (loading) return <Preloader />;
+  if (error) return <ErrorPage />;
   const contacts = data.contact;
   const favoriteContacts = contacts.filter((contact: Contact) =>
     favoriteStatus.includes(contact.id)
