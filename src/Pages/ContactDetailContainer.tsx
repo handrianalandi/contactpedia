@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppHeader from "../Components/AppHeader";
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import {
   EditContactById,
   EditPhoneNumber,
   GetContactDetail,
+  GetContactList,
 } from "../GraphQL/queries";
 import { AddNumberToContact } from "../GraphQL/mutations";
 import { Contact } from "../Interfaces/Contact";
@@ -125,7 +126,11 @@ export default function ContactDetailContainer() {
   const [newNumberExists, setNewNumberExists] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
+  const [nameExists, setNameExists] = useState(false);
+  const [existedName, setExistedName] = useState<string | null>(null);
   const [isAddingNewPhone, setIsAddingNewPhone] = useState(false);
+
+  const nameRegex = /^[a-zA-Z0-9\s]*$/;
 
   const navigate = useNavigate();
 
@@ -146,8 +151,7 @@ export default function ContactDetailContainer() {
     name: "phones",
   });
 
-  useEffect(() => {
-  }, [fields, originalPhones]);
+  useEffect(() => {}, [fields, originalPhones]);
 
   const {
     register: registerAddPhone,
@@ -168,6 +172,9 @@ export default function ContactDetailContainer() {
       },
     },
   ];
+
+  const client = useApolloClient();
+
 
   const { loading, error, data } = useQuery(GET_CONTACT[0].query, {
     variables: GET_CONTACT[0].variables,
@@ -213,8 +220,10 @@ export default function ContactDetailContainer() {
 
   const onSaveContact = async (data: FormValues) => {
     setIsSaving(true);
+    setNameExists(false);
 
     const { first_name, last_name, phones } = data;
+
     const updateName: UpdateNameType = {
       first_name,
       last_name,
@@ -228,6 +237,23 @@ export default function ContactDetailContainer() {
     }
 
     if (updateName.first_name || updateName.last_name) {
+      const { data: contactData } = await client.query({
+        query: GetContactList,
+        variables: {
+          where: {
+            _and: [
+              { first_name: { _ilike: first_name } },
+              { last_name: { _ilike: last_name } },
+            ],
+          },
+        },
+      });
+      if(contactData.contact.length > 0) {
+        setNameExists(true);
+        setExistedName(`${first_name} ${last_name}`);
+        setIsSaving(false);
+        return;
+      }
       await editContactById({
         variables: {
           id: parseInt(contactId),
@@ -322,13 +348,26 @@ export default function ContactDetailContainer() {
                 type="text"
                 placeholder="First Name"
                 disabled={isSaving}
-                {...register("first_name", { required: true })}
+                {...register("first_name", {
+                  required: true,
+                  pattern: {
+                    value: nameRegex,
+                    message: "First Name should contain only letter and number",
+                  },
+                })}
               />
-              {errors.first_name && errors.first_name.type === "required" && (
+              {errors.first_name && errors.first_name.type === "required" ? (
                 <RequiredWarningText>
                   First Name is Required
                 </RequiredWarningText>
+              ) : (
+                <RequiredWarningText>
+                  {errors.first_name?.message}
+                </RequiredWarningText>
               )}
+              {nameExists && (
+            <RequiredWarningText>Contact named "{existedName}" already exists</RequiredWarningText>
+          )}
             </SingleInformationWrapper>
           </Col>
           <Col md={6}>
@@ -338,8 +377,21 @@ export default function ContactDetailContainer() {
                 type="text"
                 disabled={isSaving}
                 placeholder="Last Name"
-                {...register("last_name")}
+                {...register("last_name", {
+                  pattern: {
+                    value: nameRegex,
+                    message: "Last Name should contain only letter and number",
+                  },
+                })}
               />
+              {errors.last_name && (
+                <RequiredWarningText>
+                  {errors.last_name?.message}
+                </RequiredWarningText>
+              )}
+              {nameExists && (
+            <RequiredWarningText>Contact named "{existedName}" already exists</RequiredWarningText>
+          )}
             </SingleInformationWrapper>
           </Col>
           {fields.map((phone, index) => (

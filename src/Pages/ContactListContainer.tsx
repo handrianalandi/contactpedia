@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
 import { GetContactList } from "../GraphQL/queries";
 import { Row, Col, Button } from "react-bootstrap";
 import ContactList from "../Components/ContactList";
@@ -11,7 +11,7 @@ import { addFavorite, removeFavorite } from "../redux/store";
 import Modal from "../Components/Modal";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, FieldErrors } from "react-hook-form";
 import Input from "../Components/Input";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import AppHeader from "../Components/AppHeader";
@@ -162,6 +162,8 @@ export default function ContactListContainer() {
     setIsOpenDeleteModal(true);
   };
 
+  const nameRegex = /^[a-zA-Z0-9\s]*$/;
+
   const {
     register,
     control,
@@ -182,20 +184,43 @@ export default function ContactListContainer() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [numberExists, setNumberExists] = useState(false);
+  const [nameExists, setNameExists] = useState(false);
+  const [existedName, setExistedName] = useState<string | null>(null);
   const [isAddingNewContact, setIsAddingNewContact] = useState(false);
   const onCloseAddModal = () => setIsOpenAddModal(false);
   const onOpenAddModal = () => setIsOpenAddModal(true);
   const [addContact] = useMutation(AddContact, {
     refetchQueries: GET_CONTACT_QUERY,
   });
+  const client = useApolloClient();
 
   const onSubmitNewContact = async (data: FormValues) => {
     setIsAddingNewContact(true);
     let favorite = isFavorite;
     setNumberExists(false);
+    setNameExists(false);
     if (data.phones && Array.isArray(data.phones)) {
       data.phones = data.phones.filter((phone) => phone.number !== "");
     }
+    
+    const { data: contactData } = await client.query({
+      query: GetContactList,
+      variables: {
+        where: {
+          _and: [
+            { first_name: { _ilike: data.first_name } },
+            { last_name: { _ilike: data.last_name } },
+          ],
+        },
+      },
+    });
+    if (contactData.contact.length > 0) {
+      setNameExists(true);
+      setExistedName(`${data.first_name} ${data.last_name}`);
+      setIsAddingNewContact(false);
+      return;
+    }
+
     await addContact({
       variables: {
         first_name: data.first_name,
@@ -246,6 +271,10 @@ export default function ContactListContainer() {
     variables: GET_CONTACT_QUERY[0].variables,
   });
 
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
+
   return (
     <>
       <AppHeader>
@@ -286,19 +315,45 @@ export default function ContactListContainer() {
             type="text"
             placeholder="First Name"
             disabled={isAddingNewContact}
-            {...register("first_name", { required: true })}
+            {...register("first_name", {
+              required: true,
+              pattern: {
+                value: nameRegex,
+                message: "First Name should contain only letter and number",
+              },
+            })}
             isRequired
           />
-          {errors.first_name && errors.first_name.type === "required" && (
+          {errors.first_name && errors.first_name.type === "required" ? (
             <RequiredWarningText>First Name is Required</RequiredWarningText>
+          ) : (
+            <RequiredWarningText>
+              {errors.first_name?.message}
+            </RequiredWarningText>
+          )}
+          {nameExists && (
+            <RequiredWarningText>Contact named "{existedName}" already exists</RequiredWarningText>
           )}
           <br />
           <Input
             type="text"
             placeholder="Last Name"
             disabled={isAddingNewContact}
-            {...register("last_name")}
+            {...register("last_name", {
+              pattern: {
+                value: nameRegex,
+                message: "Last Name should contain only letter and number",
+              },
+            })}
           />
+          {errors.last_name && (
+            <RequiredWarningText>
+              {errors.last_name?.message}
+            </RequiredWarningText>
+          )}
+          {nameExists && (
+            <RequiredWarningText>Contact named "{existedName}" already exists</RequiredWarningText>
+          )}
           <br />
           <AddToFavoriteDiv>
             <AddToFavoriteButton
