@@ -359,7 +359,7 @@ export default function ContactListContainer() {
           </AddPhoneButton>
         </AddForm>
       </Modal>
-      <FAB variant="primary" onClick={onOpenAddModal}>
+      <FAB variant="primary" onClick={onOpenAddModal} aria-label="Add">
         <FontAwesomeIcon icon={faPlus} />
       </FAB>
     </>

@@ -66,6 +66,11 @@ const ContactPagination = styled(ReactPaginate)`
   }
 `;
 
+const ContactSegmentTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 700;
+`
+
 interface ContactListProps extends QueryResult {
   handleClickDelete: (contactId: number, contactName: string) => void;
 }
@@ -99,7 +104,7 @@ const ContactList = (contactQuery: ContactListProps) => {
 
   return (
     <div>
-      <h5><b>Favorite</b></h5>
+      <ContactSegmentTitle>Favorite</ContactSegmentTitle>
       {favoriteContacts.length > 0 ? (
         <ContactWrapper>
           
@@ -119,7 +124,7 @@ const ContactList = (contactQuery: ContactListProps) => {
       ) : (
         <p>You have no favorite contact.</p>
       )}
-      <h5><b>Regular</b></h5>
+      <ContactSegmentTitle>Regular</ContactSegmentTitle>
       {nonFavoriteContacts.length > 0 ? (
         <ContactWrapper>
           
