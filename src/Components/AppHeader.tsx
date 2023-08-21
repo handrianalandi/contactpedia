@@ -65,6 +65,7 @@ export default function AppHeader({children,enableBackButton=false,backRoute}: A
       {enableBackButton && (
         <BackButton 
           onClick={goBack}
+          aria-label="Back"
         >
           <FontAwesomeIcon icon={faArrowLeft} />
         </BackButton>
