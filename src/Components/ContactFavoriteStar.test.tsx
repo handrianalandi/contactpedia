@@ -24,7 +24,7 @@ describe("ContactFavoriteStar", () => {
     );
     expect(container).toMatchSnapshot();
   });
-  
+
   it("should call dispatch", () => {
     render(<ContactFavoriteStar {...props} />);
     const star = screen.getByTestId("favorite-star");

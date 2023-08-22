@@ -21,12 +21,13 @@ import Input from "../Components/Input";
 import Modal from "../Components/Modal";
 import Preloader from "../Components/Preloader";
 import ErrorPage from "../Components/ErrorPage";
+import { toastHelper } from "../helper/toastHelper";
 
 type FormValues = {
   first_name: string;
   last_name: string;
   phones: {
-    number: number|null;
+    number: number | null;
   }[];
   favorite: boolean;
 };
@@ -65,7 +66,7 @@ const AddForm = styled.form`
 
 const ContactForm = styled(AddForm)`
   margin-bottom: 70px;
-`
+`;
 
 const SingleInformationWrapper = styled.div`
   flex: 0 0 100%;
@@ -180,7 +181,6 @@ export default function ContactDetailContainer() {
 
   const client = useApolloClient();
 
-
   const { loading, error, data } = useQuery(GET_CONTACT[0].query, {
     variables: GET_CONTACT[0].variables,
   });
@@ -215,8 +215,20 @@ export default function ContactDetailContainer() {
     }
   }, [loading, error, data, setValue, remove, append]);
 
-  if (loading) return <><AppHeader /><Preloader /></>;
-  if (error) return <><AppHeader /><ErrorPage /></>;
+  if (loading)
+    return (
+      <>
+        <AppHeader />
+        <Preloader />
+      </>
+    );
+  if (error)
+    return (
+      <>
+        <AppHeader />
+        <ErrorPage />
+      </>
+    );
 
   if (!data.contact_by_pk) {
     navigate("/");
@@ -226,6 +238,7 @@ export default function ContactDetailContainer() {
   const onSaveContact = async (data: FormValues) => {
     setIsSaving(true);
     setNameExists(false);
+    let somethingUpdated = false;
 
     const { first_name, last_name, phones } = data;
 
@@ -242,6 +255,7 @@ export default function ContactDetailContainer() {
     }
 
     if (updateName.first_name || updateName.last_name) {
+      somethingUpdated = true;
       const { data: contactData } = await client.query({
         query: GetContactList,
         variables: {
@@ -253,7 +267,7 @@ export default function ContactDetailContainer() {
           },
         },
       });
-      if(contactData.contact.length > 0) {
+      if (contactData.contact.length > 0) {
         setNameExists(true);
         setExistedName(`${first_name} ${last_name}`);
         setIsSaving(false);
@@ -290,6 +304,7 @@ export default function ContactDetailContainer() {
       .filter((updatedPhone) => updatedPhone !== null);
 
     if (updatePhones.length > 0) {
+      somethingUpdated = true;
       updatePhones.forEach(async (newPhoneData) => {
         await editPhoneNumber({
           variables: {
@@ -299,6 +314,9 @@ export default function ContactDetailContainer() {
       });
     }
 
+    if (somethingUpdated) {
+      toastHelper("Contact updated successfully!🎉", "success");
+    }
     setIsSaving(false);
   };
 
@@ -318,6 +336,7 @@ export default function ContactDetailContainer() {
         //check if phone number already exists on the fields
         onCloseAddPhone();
         resetAddPhone();
+        toastHelper("Phone number added successfully!📞", "success");
       },
       onError: (error) => {
         if (
@@ -371,8 +390,10 @@ export default function ContactDetailContainer() {
                 </RequiredWarningText>
               )}
               {nameExists && (
-            <RequiredWarningText>Contact named "{existedName}" already exists</RequiredWarningText>
-          )}
+                <RequiredWarningText>
+                  Contact named "{existedName}" already exists
+                </RequiredWarningText>
+              )}
             </SingleInformationWrapper>
           </Col>
           <Col md={6}>
@@ -395,8 +416,10 @@ export default function ContactDetailContainer() {
                 </RequiredWarningText>
               )}
               {nameExists && (
-            <RequiredWarningText>Contact named "{existedName}" already exists</RequiredWarningText>
-          )}
+                <RequiredWarningText>
+                  Contact named "{existedName}" already exists
+                </RequiredWarningText>
+              )}
             </SingleInformationWrapper>
           </Col>
           {fields.map((phone, index) => (

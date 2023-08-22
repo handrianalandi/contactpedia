@@ -38,7 +38,7 @@ query GetContactDetail($id: Int!){
   }
 }
 }
-`
+`;
 
 export const EditContactById = gql`
 mutation EditContactById($id: Int!, $_set: contact_set_input) {
@@ -51,7 +51,7 @@ mutation EditContactById($id: Int!, $_set: contact_set_input) {
     }
   }
 }
-`
+`;
 
 export const EditPhoneNumber = gql`
 mutation EditPhoneNumber($pk_columns: phone_pk_columns_input!, $new_phone_number:String!) {
@@ -67,4 +67,4 @@ mutation EditPhoneNumber($pk_columns: phone_pk_columns_input!, $new_phone_number
     }
   }
 }
-`
+`;

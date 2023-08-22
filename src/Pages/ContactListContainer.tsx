@@ -15,6 +15,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import Input from "../Components/Input";
 import BootstrapSwitchButton from "bootstrap-switch-button-react";
 import AppHeader from "../Components/AppHeader";
+import { toastHelper } from "../helper/toastHelper";
 
 type FormValues = {
   first_name: string;
@@ -112,11 +113,11 @@ const PhoneNumberDeleteButton = styled(Button)`
   color: #06ba63;
   font-size: 1rem;
 
-  &:hover, &:active {
-    background-color:transparent !important;
+  &:hover,
+  &:active {
+    background-color: transparent !important;
     color: #06ba63 !important;
   }
-
 `;
 
 const AddToFavoriteDiv = styled(PhoneNumberDiv)`
@@ -139,6 +140,12 @@ const AddToFavoriteText = styled.span`
 const RequiredWarningText = styled.span`
   color: red;
   width: 100%;
+`;
+
+const DeleteText = styled.p`
+  text-align: center;
+  margin: 0;
+  padding: 0;
 `;
 
 export default function ContactListContainer() {
@@ -255,6 +262,7 @@ export default function ContactListContainer() {
         }
         onCloseAddModal();
         reset();
+        toastHelper(`${data.first_name} added successfully!🎉`);
       },
       onError: (error) => {
         if (
@@ -286,6 +294,7 @@ export default function ContactListContainer() {
     dispatch(removeFavorite(deleteContactId));
     onCloseDeleteModal();
     setIsDeleting(false);
+    toastHelper(`${deleteContactName} deleted successfully!👋`, "warn");
   };
 
   const contactQuery = useQuery(GET_CONTACT_QUERY[0].query, {
@@ -295,7 +304,10 @@ export default function ContactListContainer() {
   return (
     <>
       <AppHeader>
-        <SearchBar setSearchTerm={setSearchTerm} placeholder={'Name or Phone: Seek and You Shall Find!'}/>
+        <SearchBar
+          setSearchTerm={setSearchTerm}
+          placeholder={"Name or Phone: Seek and You Shall Find!"}
+        />
       </AppHeader>
       <RowWrapper>
         <Col>
@@ -317,7 +329,13 @@ export default function ContactListContainer() {
         confirmButtonType="danger"
         isLoading={isDeleting}
       >
-        <p>Are you sure you want to delete {deleteContactName}?</p>
+        <DeleteText>
+          👋 Hold up! Are you sure you wanna remove <b>{deleteContactName}</b>{" "}
+          from your contacts?{" "}
+          <RequiredWarningText>
+            This action can't be undone!
+          </RequiredWarningText>
+        </DeleteText>
         <br />
       </Modal>
 
@@ -361,30 +379,28 @@ export default function ContactListContainer() {
             )}
           </SingleInformationWrapper>
           <SingleInformationWrapper>
-            <SingleInformationLabel>
-              Last Name
-            </SingleInformationLabel>
+            <SingleInformationLabel>Last Name</SingleInformationLabel>
             <Input
-            type="text"
-            placeholder="Ex: Doe"
-            disabled={isAddingNewContact}
-            {...register("last_name", {
-              pattern: {
-                value: nameRegex,
-                message: "Last Name should contain only letter and number",
-              },
-            })}
-          />
-          {errors.last_name && (
-            <RequiredWarningText>
-              {errors.last_name?.message}
-            </RequiredWarningText>
-          )}
-          {nameExists && (
-            <RequiredWarningText>
-              Contact named "{existedName}" already exists
-            </RequiredWarningText>
-          )}
+              type="text"
+              placeholder="Ex: Doe"
+              disabled={isAddingNewContact}
+              {...register("last_name", {
+                pattern: {
+                  value: nameRegex,
+                  message: "Last Name should contain only letter and number",
+                },
+              })}
+            />
+            {errors.last_name && (
+              <RequiredWarningText>
+                {errors.last_name?.message}
+              </RequiredWarningText>
+            )}
+            {nameExists && (
+              <RequiredWarningText>
+                Contact named "{existedName}" already exists
+              </RequiredWarningText>
+            )}
           </SingleInformationWrapper>
           <AddToFavoriteDiv>
             <AddToFavoriteButton
@@ -400,11 +416,12 @@ export default function ContactListContainer() {
             <AddToFavoriteText>*Click to add to favorite</AddToFavoriteText>
           </AddToFavoriteDiv>
           {fields.map((field, index) => (
-              <SingleInformationWrapper key={field.id}>
-                <SingleInformationLabel>
-                  Phone Number {index + 1}<RedStar>*</RedStar>
-                </SingleInformationLabel>
-                <PhoneNumberDiv>
+            <SingleInformationWrapper key={field.id}>
+              <SingleInformationLabel>
+                Phone Number {index + 1}
+                <RedStar>*</RedStar>
+              </SingleInformationLabel>
+              <PhoneNumberDiv>
                 <PhoneNumberInput
                   type="number"
                   disabled={isAddingNewContact}
@@ -430,7 +447,7 @@ export default function ContactListContainer() {
                     Phone Number is Required
                   </RequiredWarningText>
                 )}
-              </SingleInformationWrapper>
+            </SingleInformationWrapper>
           ))}
           {numberExists && (
             <RequiredWarningText>

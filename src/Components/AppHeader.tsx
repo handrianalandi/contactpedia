@@ -16,9 +16,9 @@ const AppHeaderRow = styled(RowWrapper)`
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 0 0 10px 10px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 `;
 
 const AppTitle = styled.h1`
@@ -26,7 +26,7 @@ const AppTitle = styled.h1`
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
-    font-style: italic;
+  font-style: italic;
 `;
 
 const BackButton = styled.button`
@@ -43,15 +43,19 @@ const BackButton = styled.button`
   top: 15px;
   width: 25px;
   height: 25px;
-`
+`;
 
 interface AppHeaderProps {
-    children?: React.ReactNode;
-    enableBackButton?: boolean;
-    backRoute?: string|undefined;
+  children?: React.ReactNode;
+  enableBackButton?: boolean;
+  backRoute?: string | undefined;
 }
 
-export default function AppHeader({children,enableBackButton=false,backRoute}: AppHeaderProps) {
+export default function AppHeader({
+  children,
+  enableBackButton = false,
+  backRoute,
+}: AppHeaderProps) {
   const navigate = useNavigate();
   const goBack = () => {
     if (backRoute) {
@@ -59,26 +63,26 @@ export default function AppHeader({children,enableBackButton=false,backRoute}: A
     } else {
       navigate(-1);
     }
-  }
+  };
   return (
     <AppHeaderRow>
       {enableBackButton && (
-        <BackButton 
-          onClick={goBack}
-          aria-label="Back"
-        >
+        <BackButton onClick={goBack} aria-label="Back">
           <FontAwesomeIcon icon={faArrowLeft} />
         </BackButton>
       )}
       <Col className="d-flex justify-content-center">
-        <AppTitle>Contactpedia</AppTitle>
+        <AppTitle
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Contactpedia
+        </AppTitle>
       </Col>
       {children && (
-        <Col className="d-flex justify-content-center">
-        {children}
-      </Col>
+        <Col className="d-flex justify-content-center">{children}</Col>
       )}
-      
     </AppHeaderRow>
   );
 }

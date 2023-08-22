@@ -53,4 +53,4 @@ mutation AddNumberToContact ($contact_id: Int!, $phone_number:String!) {
     }
   }
 }
-`
+`;

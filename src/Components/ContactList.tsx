@@ -92,12 +92,18 @@ interface ContactListProps {
 }
 
 const ContactList = (contactQuery: ContactListProps) => {
-  const { loading, error, data, handleClickDelete,searchTerm="" } = contactQuery;
+  const {
+    loading,
+    error,
+    data,
+    handleClickDelete,
+    searchTerm = "",
+  } = contactQuery;
   const favoriteStatus = useSelector(selectFavorites);
 
   const [currentPage, setCurrentPage] = useState(1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [contactPerPage, setContactPerPage] = useState(9);
+  const [contactPerPage, setContactPerPage] = useState(10);
   const indexOfLastContact = currentPage * contactPerPage;
   const indexOfFirstContact = indexOfLastContact - contactPerPage;
 
@@ -143,11 +149,13 @@ const ContactList = (contactQuery: ContactListProps) => {
             ))}
           </ContactWrapper>
         ) : (
-          <EmptyData 
-          text={searchTerm==="" ? 
-          'You don\'t have a favorite buddies!🌟': 
-          `You have no favorite buddy named ${searchTerm}!`
-        }/>
+          <EmptyData
+            text={
+              searchTerm === ""
+                ? "You don't have a favorite buddies!🌟"
+                : `You have no favorite buddy named ${searchTerm}!`
+            }
+          />
         )}
       </ContactSegmentWrapper>
       <ContactSegmentWrapper>
@@ -173,9 +181,13 @@ const ContactList = (contactQuery: ContactListProps) => {
             ))}
           </ContactWrapper>
         ) : (
-          <EmptyData text={searchTerm==='' ? 
-          'Uh-oh! It seems you haven\'t added any buddies to your contact list.😔' : 
-          `You have no buddy named ${searchTerm}!`} />
+          <EmptyData
+            text={
+              searchTerm === ""
+                ? "Uh-oh! It seems you haven't added any buddies to your contact list.😔"
+                : `You have no buddy named ${searchTerm}!`
+            }
+          />
         )}
         <ContactPagination
           breakLabel="..."
