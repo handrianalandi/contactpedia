@@ -17,5 +17,5 @@ You can access the Contact App online at [contactpedia.vercel.app](https://conta
 
 ---
 
-This project is created as part of a coding test for a job application at Company [Tokopedia](https://www.tokopedia.com).  
+This project is created as part of a coding test for a job application at Company [GoTo](https://www.gotocompany.com/).  
 \#Godspeed
