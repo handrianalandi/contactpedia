@@ -15,19 +15,20 @@ const InputComponent = styled.input`
     }
 `
 interface InputProps {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     value?: string;
     placeholder?: string;
     isRequired?: boolean;
-    type: string;
+    type?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-    ({ onChange, placeholder,isRequired=false, ...restProps }, ref) => (
+    ({ onChange = ()=>{}, placeholder,isRequired=false,type='text', ...restProps }, ref) => (
         <InputComponent
             ref={ref}
             placeholder={isRequired?`${placeholder}*`:placeholder}
             onChange={onChange}
+            data-testid="input-element-test"
             {...restProps}
         />
     )

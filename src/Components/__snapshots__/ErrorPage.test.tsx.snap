@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorPage should render correctly 1`] = `
+<div>
+  <div
+    class="css-15228ja"
+  >
+    <img
+      alt="Error"
+      class="css-30l6hb"
+      src="error_vector.png"
+    />
+    <h2
+      class="css-nyxvcy"
+    >
+      Oops! Something went wrong.
+    </h2>
+    <p
+      class="css-g6iv93"
+    >
+      Please 
+      <a
+        class="css-1skq4v4"
+        href="/"
+      >
+        refresh
+      </a>
+       this page or try again later
+    </p>
+    <button
+      class="btn btn-primary"
+      type="button"
+    >
+      Back to Home
+    </button>
+  </div>
+</div>
+`;

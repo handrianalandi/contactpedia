@@ -450,7 +450,7 @@ export default function ContactDetailContainer() {
               Phone Number<RedStar>*</RedStar>
             </SingleInformationLabel>
             <Input
-              type="text"
+              type="number"
               placeholder="Phone Number"
               disabled={isAddingNewPhone}
               {...registerAddPhone("number", { required: true })}

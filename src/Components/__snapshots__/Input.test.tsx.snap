@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input should render correctly with props 1`] = `
+<div>
+  <input
+    class="css-om0g4z"
+    data-testid="input-element-test"
+    placeholder="test"
+    value="test"
+  />
+</div>
+`;
+
+exports[`Input should render correctly without props 1`] = `
+<div>
+  <input
+    class="css-om0g4z"
+    data-testid="input-element-test"
+  />
+</div>
+`;

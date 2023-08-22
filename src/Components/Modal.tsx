@@ -88,25 +88,24 @@ export default function Modal({
   children,
 }: ModalProps) {
   return (
-    <ModalStyle show={isOpen} onHide={onClose}>
+    <ModalStyle show={isOpen} onHide={onClose} data-testid="modal-test">
       {heading && (
         <ModalElement.Header closeButton>
           <ModalElement.Title>{heading}</ModalElement.Title>
         </ModalElement.Header>
       )}
-      <ModalElement.Body>
-        {children}
-    </ModalElement.Body>
+      <ModalElement.Body>{children}</ModalElement.Body>
       <ModalElement.Footer>
         {visibleCloseButton && (
-        <Button variant="outline-secondary" onClick={onClose}>
-          Close
-        </Button>
+          <Button variant="outline-secondary" onClick={onClose}>
+            Close
+          </Button>
         )}
-        <Button 
-        variant={confirmButtonType}
-        onClick={onConfirm}
-        isLoading={isLoading}
+        <Button
+          variant={confirmButtonType}
+          onClick={onConfirm}
+          isLoading={isLoading}
+          data-testid="modal-confirm-button"
         >
           {confirmText}
         </Button>

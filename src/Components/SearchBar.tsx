@@ -30,6 +30,7 @@ export default function SearchBar({setSearchTerm}: SearchBarProps) {
     <SearchIcon icon={faSearch} />
     <InputElement 
         type="text"
+        data-testid="search-bar"
         placeholder="Find by Name or Phone Number"
         onChange={(e) => setSearchTerm(e.target.value)}
     />

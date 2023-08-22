@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Skeleton should render correctly 1`] = `
+<div>
+  <div
+    class="css-c62n0o"
+  />
+  <div
+    class="css-dbrq19"
+  />
+  <div
+    class="css-7hekhs"
+  />
+</div>
+`;
