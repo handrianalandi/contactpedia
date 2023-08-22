@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Searchbar should render correctly 1`] = `
+exports[`Searchbar should render correctly with props 1`] = `
 <div>
   <div
     class="css-1xm32e0"
@@ -23,7 +23,8 @@ exports[`Searchbar should render correctly 1`] = `
     <input
       class="css-1nxvnac"
       data-testid="search-bar"
-      placeholder="Find by Name or Phone Number"
+      placeholder="Test Placeholder"
+      type="text"
     />
   </div>
 </div>

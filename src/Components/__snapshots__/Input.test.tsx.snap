@@ -6,6 +6,7 @@ exports[`Input should render correctly with props 1`] = `
     class="css-om0g4z"
     data-testid="input-element-test"
     placeholder="test"
+    type="text"
     value="test"
   />
 </div>
@@ -16,6 +17,7 @@ exports[`Input should render correctly without props 1`] = `
   <input
     class="css-om0g4z"
     data-testid="input-element-test"
+    type="text"
   />
 </div>
 `;

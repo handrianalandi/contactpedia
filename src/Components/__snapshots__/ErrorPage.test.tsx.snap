@@ -8,7 +8,7 @@ exports[`ErrorPage should render correctly 1`] = `
     <img
       alt="Error"
       class="css-30l6hb"
-      src="error_vector.png"
+      src="error-vector.png"
     />
     <h2
       class="css-nyxvcy"

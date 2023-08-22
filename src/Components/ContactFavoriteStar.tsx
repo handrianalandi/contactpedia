@@ -25,6 +25,7 @@ export default function ContactFavoriteStar({isFavorite, contactId}: ContactFavo
     <FontAwesomeIcon
             icon={isFavorite ? faStar : farStar}
             color={isFavorite ? "orange" : "lightgrey"}
+            data-testid="favorite-star"
             onClick={handleStarClick}
           />
   )

@@ -1,24 +1,21 @@
-import {render} from '@testing-library/react';
-import ErrorPage from './ErrorPage';
-import { MemoryRouter } from 'react-router-dom';
+import { render } from "@testing-library/react";
+import ErrorPage from "./ErrorPage";
+import { MemoryRouter } from "react-router-dom";
 
 const mockedUsedNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-   ...jest.requireActual('react-router-dom') as any,
+jest.mock("react-router-dom", () => ({
+  ...(jest.requireActual("react-router-dom") as any),
   useNavigate: () => mockedUsedNavigate,
 }));
 
-describe('ErrorPage', () => {
-    it('should render correctly', () => {
-        const {container} = render(
-        <MemoryRouter>
+describe("ErrorPage", () => {
+  it("should render correctly", () => {
+    const { container } = render(
+      <MemoryRouter>
         <ErrorPage />
-        </MemoryRouter>
-        );
-        expect(container).toMatchSnapshot();
-    }
+      </MemoryRouter>
     );
-
-
+    expect(container).toMatchSnapshot();
+  });
 });

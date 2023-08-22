@@ -32,7 +32,7 @@ type FormValues = {
 };
 
 type FormValuesAddPhone = {
-  number: string;
+  number: number | null;
 };
 
 type UpdateNameType = {
@@ -63,6 +63,10 @@ const AddForm = styled.form`
   justify-content: center;
 `;
 
+const ContactForm = styled(AddForm)`
+  margin-bottom: 70px;
+`
+
 const SingleInformationWrapper = styled.div`
   flex: 0 0 100%;
   display: flex;
@@ -92,7 +96,6 @@ const AddPhoneButton = styled(Button)`
   background-color: white !important;
   margin-top: 10px;
   width: 100%;
-  margin-bottom: 70px;
 
   &:hover {
     background-color: #06ba63 !important;
@@ -162,7 +165,7 @@ export default function ContactDetailContainer() {
     reset: resetAddPhone,
   } = useForm<FormValuesAddPhone>({
     defaultValues: {
-      number: "",
+      number: null,
     },
   });
 
@@ -281,7 +284,7 @@ export default function ContactDetailContainer() {
             number: originalPhones[index],
             contact_id: parseInt(contactId),
           },
-          new_phone_number: phone.number,
+          new_phone_number: phone.number?.toString(),
         };
       })
       .filter((updatedPhone) => updatedPhone !== null);
@@ -302,14 +305,14 @@ export default function ContactDetailContainer() {
   const onCloseAddPhone = () => setIsOpenAddPhone(false);
   const onOpenAddPhone = () => setIsOpenAddPhone(true);
 
-  const onSubmitNewPhone = async (data: { number: string }) => {
+  const onSubmitNewPhone = async (data: FormValuesAddPhone) => {
     setIsAddingNewPhone(true);
     setNewNumberExists(false);
     const { number } = data;
     await addNumberToContact({
       variables: {
         contact_id: parseInt(contactId),
-        phone_number: number,
+        phone_number: number?.toString(),
       },
       onCompleted: (response) => {
         //check if phone number already exists on the fields
@@ -339,7 +342,7 @@ export default function ContactDetailContainer() {
           />
         </FavoriteStarWrapper>
       </AppHeader>
-      <AddForm>
+      <ContactForm>
         <Row>
           <Col md={6}>
             <SingleInformationWrapper>
@@ -427,7 +430,7 @@ export default function ContactDetailContainer() {
             </AddPhoneButton>
           </Col>
         </Row>
-      </AddForm>
+      </ContactForm>
       <SaveContactButton
         variant="primary"
         onClick={handleSubmit(onSaveContact)}

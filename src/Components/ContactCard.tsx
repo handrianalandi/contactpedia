@@ -18,6 +18,7 @@ const ContactCardElement = styled.div<{ visible: boolean, favorite: boolean }>`
   border-radius: 15px;
   padding: 10px;
   text-decoration: none;
+  background: white;
   color: #000;
   display: flex;
   flex-wrap: wrap;
@@ -74,20 +75,26 @@ const PhoneLink = styled(Link)`
 `
 
 interface ContactCardProps extends Contact {
-  isFavorite: boolean;
+  isFavorite?: boolean;
   handleClickDelete: (contactId: number, contactName: string) => void;
 }
 
-export default function ContactCard(contact: ContactCardProps) {
+export default function ContactCard({
+  id,
+  isFavorite=false,
+  first_name,
+  last_name,
+  phones,
+  handleClickDelete}: ContactCardProps) {
   const [visible, setVisible] = React.useState(false);
 
   const navigate = useNavigate();
   const handleContactClick = () => {
-    navigate(`/contact/${contact.id}`);
+    navigate(`/contact/${id}`);
   };
 
   return (
-    <ContactCardElement visible={visible} favorite={contact.isFavorite}>
+    <ContactCardElement visible={visible} favorite={isFavorite}>
       <ContactCardWrapper>
         <ContactInformationWrapper
           onClick={() => {
@@ -96,11 +103,11 @@ export default function ContactCard(contact: ContactCardProps) {
         >
           <div>
             <b>
-              {contact.first_name} {contact.last_name}
+              {first_name} {last_name}
             </b>
           </div>
           <div>
-            {contact.phones.map((phone, index) => (
+            {phones.map((phone, index) => (
               <span key={index}>
                 Phone {index + 1}: <PhoneLink target="_blank" rel="noopener noreferrer" to={`https://wa.me/${phone.number}`}>{phone.number}</PhoneLink>
                 <br />
@@ -110,8 +117,8 @@ export default function ContactCard(contact: ContactCardProps) {
         </ContactInformationWrapper>
         <FavoriteIconWrapper>
           <ContactFavoriteStar
-            isFavorite={contact.isFavorite}
-            contactId={contact.id}
+            isFavorite={isFavorite}
+            contactId={id}
           />
         </FavoriteIconWrapper>
       </ContactCardWrapper>
@@ -124,10 +131,11 @@ export default function ContactCard(contact: ContactCardProps) {
         <FontAwesomeIcon
           icon={faTrash}
           color={"grey"}
+          data-testid="delete-contact-button"
           onClick={() => {
-            contact.handleClickDelete(
-              contact.id,
-              `${contact.first_name} ${contact.last_name}`
+            handleClickDelete(
+              id,
+              `${first_name} ${last_name}`
             );
           }}
         />

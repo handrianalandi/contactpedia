@@ -1,4 +1,4 @@
-import { QueryResult } from "@apollo/client";
+import { ApolloError } from "@apollo/client";
 import { Contact } from "../Interfaces/Contact";
 import styled from "@emotion/styled";
 import ContactCard from "./ContactCard";
@@ -8,9 +8,9 @@ import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import Preloader from "./Preloader";
 import ErrorPage from "./ErrorPage";
+import EmptyData from "./EmptyData";
 
 const ContactWrapper = styled.div`
-  list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
@@ -43,7 +43,7 @@ const ContactPagination = styled(ReactPaginate)`
     border-radius: 10px;
     cursor: pointer;
 
-    &.disabled{
+    &.disabled {
       & a {
         color: #ccc;
       }
@@ -60,7 +60,8 @@ const ContactPagination = styled(ReactPaginate)`
       color: white;
     }
 
-    &.previous, &.next{
+    &.previous,
+    &.next {
       border: none;
       font-weight: 500;
       background-color: transparent;
@@ -71,14 +72,27 @@ const ContactPagination = styled(ReactPaginate)`
 const ContactSegmentTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 700;
-`
+`;
 
-interface ContactListProps extends QueryResult {
+const ContactSegmentWrapper = styled.div`
+  background-color: #f0f8f1;
+  padding: 10px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+`;
+
+interface ContactListProps {
+  loading: boolean;
+  error: ApolloError | undefined;
+  data: {
+    contact: Contact[];
+  };
   handleClickDelete: (contactId: number, contactName: string) => void;
+  searchTerm?: string;
 }
 
 const ContactList = (contactQuery: ContactListProps) => {
-  const { loading, error, data, handleClickDelete } = contactQuery;
+  const { loading, error, data, handleClickDelete,searchTerm="" } = contactQuery;
   const favoriteStatus = useSelector(selectFavorites);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -106,55 +120,73 @@ const ContactList = (contactQuery: ContactListProps) => {
 
   return (
     <div>
-      <ContactSegmentTitle>Favorite</ContactSegmentTitle>
-      {favoriteContacts.length > 0 ? (
-        <ContactWrapper>
-          
-          {favoriteContacts.map((contact: Contact) => (
-            <ContactCard key={contact.id} isFavorite {...contact} handleClickDelete={handleClickDelete}>
-              {contact.first_name} {contact.last_name}
-              <br />
-              {contact.phones.map((phone, index) => (
-                <span key={index}>
-                  {phone.number}
-                  <br />
-                </span>
-              ))}
-            </ContactCard>
-          ))}
-        </ContactWrapper>
-      ) : (
-        <p>You have no favorite contact.</p>
-      )}
-      <ContactSegmentTitle>Regular</ContactSegmentTitle>
-      {nonFavoriteContacts.length > 0 ? (
-        <ContactWrapper>
-          
-          {currentContacts.map((contact: Contact) => (
-            <ContactCard key={contact.id} isFavorite={false} {...contact} handleClickDelete={handleClickDelete}>
-              {contact.first_name} {contact.last_name}
-              <br />
-              {contact.phones.map((phone, index) => (
-                <span key={index}>
-                  {phone.number}
-                  <br />
-                </span>
-              ))}
-            </ContactCard>
-          ))}
-        </ContactWrapper>
-      ) : (
-        <p>You have no contact.</p>
-      )}
-      <ContactPagination
-        breakLabel="..."
-        onPageChange={(page) => setCurrentPage(page.selected + 1)}
-        pageRangeDisplayed={5}
-        pageCount={Math.ceil(totalContacts / contactPerPage)}
-        renderOnZeroPageCount={null}
-        previousLabel={"<"}
-        nextLabel={">"}
-      />
+      <ContactSegmentWrapper>
+        <ContactSegmentTitle>Favorite</ContactSegmentTitle>
+        {favoriteContacts.length > 0 ? (
+          <ContactWrapper>
+            {favoriteContacts.map((contact: Contact) => (
+              <ContactCard
+                key={contact.id}
+                isFavorite
+                {...contact}
+                handleClickDelete={handleClickDelete}
+              >
+                {contact.first_name} {contact.last_name}
+                <br />
+                {contact.phones.map((phone, index) => (
+                  <span key={index}>
+                    {phone.number}
+                    <br />
+                  </span>
+                ))}
+              </ContactCard>
+            ))}
+          </ContactWrapper>
+        ) : (
+          <EmptyData 
+          text={searchTerm==="" ? 
+          'You don\'t have a favorite buddies!🌟': 
+          `You have no favorite buddy named ${searchTerm}!`
+        }/>
+        )}
+      </ContactSegmentWrapper>
+      <ContactSegmentWrapper>
+        <ContactSegmentTitle>Regular</ContactSegmentTitle>
+        {nonFavoriteContacts.length > 0 ? (
+          <ContactWrapper>
+            {currentContacts.map((contact: Contact) => (
+              <ContactCard
+                key={contact.id}
+                isFavorite={false}
+                {...contact}
+                handleClickDelete={handleClickDelete}
+              >
+                {contact.first_name} {contact.last_name}
+                <br />
+                {contact.phones.map((phone, index) => (
+                  <span key={index}>
+                    {phone.number}
+                    <br />
+                  </span>
+                ))}
+              </ContactCard>
+            ))}
+          </ContactWrapper>
+        ) : (
+          <EmptyData text={searchTerm==='' ? 
+          'Uh-oh! It seems you haven\'t added any buddies to your contact list.😔' : 
+          `You have no buddy named ${searchTerm}!`} />
+        )}
+        <ContactPagination
+          breakLabel="..."
+          onPageChange={(page) => setCurrentPage(page.selected + 1)}
+          pageRangeDisplayed={5}
+          pageCount={Math.ceil(totalContacts / contactPerPage)}
+          renderOnZeroPageCount={null}
+          previousLabel={"<"}
+          nextLabel={">"}
+        />
+      </ContactSegmentWrapper>
     </div>
   );
 };

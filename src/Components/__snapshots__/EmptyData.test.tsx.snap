@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmptyData should render correctly 1`] = `
+<div>
+  <div
+    class="css-1vlo6q4"
+  >
+    <img
+      alt="Empty Data"
+      src="empty-data-vector.png"
+    />
+    <h5
+      class="css-1ak0za4"
+    >
+      No Data Found
+    </h5>
+  </div>
+</div>
+`;

@@ -295,12 +295,15 @@ export default function ContactListContainer() {
   return (
     <>
       <AppHeader>
-        <SearchBar setSearchTerm={setSearchTerm} />
+        <SearchBar setSearchTerm={setSearchTerm} placeholder={'Name or Phone: Seek and You Shall Find!'}/>
       </AppHeader>
       <RowWrapper>
         <Col>
           <ContactList
-            {...contactQuery}
+            loading={contactQuery.loading}
+            error={contactQuery.error}
+            data={contactQuery.data}
+            searchTerm={searchTerm}
             handleClickDelete={handleClickDelete}
           />
         </Col>

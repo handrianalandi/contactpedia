@@ -1,5 +1,5 @@
 import React from 'react'
-import errorVectorImage from '../assets/error_vector.png'
+import errorVectorImage from '../assets/error-vector.png'
 import styled from '@emotion/styled'
 import { Link, useNavigate } from 'react-router-dom'
 import Button from './Button'

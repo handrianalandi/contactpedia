@@ -29,6 +29,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             placeholder={isRequired?`${placeholder}*`:placeholder}
             onChange={onChange}
             data-testid="input-element-test"
+            type={type}
             {...restProps}
         />
     )
