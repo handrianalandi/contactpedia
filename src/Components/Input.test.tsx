@@ -1,5 +1,9 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import Input from "./Input";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
+
 describe("Input", () => {
   const props = {
     mockOnChange: jest.fn(),

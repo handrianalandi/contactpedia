@@ -1,5 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import Button from "./Button";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
+
 describe("Button", () => {
   //create jest fn
   it("should render correctly", () => {

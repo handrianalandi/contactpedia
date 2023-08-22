@@ -3,6 +3,9 @@ import ContactList from "./ContactList";
 import { ApolloError } from "@apollo/client";
 import { MemoryRouter } from "react-router-dom";
 import * as redux from "react-redux";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({

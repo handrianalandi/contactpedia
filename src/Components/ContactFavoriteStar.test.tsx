@@ -1,5 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import ContactFavoriteStar from "./ContactFavoriteStar";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
 
 const mockDispatch = jest.fn();
 jest.mock("react-redux", () => ({

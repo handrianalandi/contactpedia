@@ -1,13 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Searchbar should render correctly with props 1`] = `
+.emotion-0 {
+  position: relative;
+  width: 100%;
+}
+
+.emotion-1 {
+  height: 1.3rem;
+  width: 1.3rem;
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  color: #656565;
+}
+
+.emotion-2 {
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  padding: 10px;
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: 2.5rem;
+}
+
+.emotion-2:focus {
+  outline: none;
+  border: 2px solid #06ba63;
+}
+
 <div>
   <div
-    class="css-1xm32e0"
+    class="emotion-0"
   >
     <svg
       aria-hidden="true"
-      class="svg-inline--fa fa-magnifying-glass  css-9bzw59"
+      class="svg-inline--fa fa-magnifying-glass  emotion-1"
       data-icon="magnifying-glass"
       data-prefix="fas"
       focusable="false"
@@ -21,7 +56,7 @@ exports[`Searchbar should render correctly with props 1`] = `
       />
     </svg>
     <input
-      class="css-1nxvnac"
+      class="emotion-2"
       data-testid="search-bar"
       placeholder="Test Placeholder"
       type="text"

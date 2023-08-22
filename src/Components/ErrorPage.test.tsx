@@ -1,6 +1,9 @@
 import { render } from "@testing-library/react";
 import ErrorPage from "./ErrorPage";
 import { MemoryRouter } from "react-router-dom";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
 
 const mockedUsedNavigate = jest.fn();
 

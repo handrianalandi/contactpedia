@@ -1,5 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import Modal from "./Modal";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
 
 describe("Modal", () => {
   const props = {

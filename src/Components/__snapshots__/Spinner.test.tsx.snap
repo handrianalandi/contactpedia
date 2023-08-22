@@ -1,11 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Spinner should render correctly with isInvertedColor 1`] = `
+.emotion-0 {
+  color: white;
+  font-size: 1rem;
+}
+
 <div>
   <div>
     <svg
       aria-hidden="true"
-      class="svg-inline--fa fa-spinner fa-spin fa-xs  css-6wycx"
+      class="svg-inline--fa fa-spinner fa-spin fa-xs  emotion-0"
       data-icon="spinner"
       data-prefix="fas"
       focusable="false"
@@ -23,11 +28,16 @@ exports[`Spinner should render correctly with isInvertedColor 1`] = `
 `;
 
 exports[`Spinner should render correctly with size lg 1`] = `
+.emotion-0 {
+  color: #06ba63;
+  font-size: 2rem;
+}
+
 <div>
   <div>
     <svg
       aria-hidden="true"
-      class="svg-inline--fa fa-spinner fa-spin fa-lg  css-1lz4thx"
+      class="svg-inline--fa fa-spinner fa-spin fa-lg  emotion-0"
       data-icon="spinner"
       data-prefix="fas"
       focusable="false"
@@ -45,11 +55,16 @@ exports[`Spinner should render correctly with size lg 1`] = `
 `;
 
 exports[`Spinner should render correctly with size sm 1`] = `
+.emotion-0 {
+  color: #06ba63;
+  font-size: 1.5rem;
+}
+
 <div>
   <div>
     <svg
       aria-hidden="true"
-      class="svg-inline--fa fa-spinner fa-spin fa-sm  css-h6drsu"
+      class="svg-inline--fa fa-spinner fa-spin fa-sm  emotion-0"
       data-icon="spinner"
       data-prefix="fas"
       focusable="false"
@@ -67,11 +82,16 @@ exports[`Spinner should render correctly with size sm 1`] = `
 `;
 
 exports[`Spinner should render correctly with size xs 1`] = `
+.emotion-0 {
+  color: #06ba63;
+  font-size: 1rem;
+}
+
 <div>
   <div>
     <svg
       aria-hidden="true"
-      class="svg-inline--fa fa-spinner fa-spin fa-xs  css-xypry0"
+      class="svg-inline--fa fa-spinner fa-spin fa-xs  emotion-0"
       data-icon="spinner"
       data-prefix="fas"
       focusable="false"

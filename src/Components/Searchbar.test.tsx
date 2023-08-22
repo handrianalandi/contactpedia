@@ -1,5 +1,9 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import SearchBar from "./SearchBar";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
+
 const props = {
   setSearchTerm: jest.fn(),
   placeholder: "Test Placeholder",

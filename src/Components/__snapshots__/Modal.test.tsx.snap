@@ -27,6 +27,11 @@ exports[`Modal should render correctly opened 1`] = `
 `;
 
 exports[`Modal should render correctly when isLoading 1`] = `
+.emotion-0 {
+  color: white;
+  font-size: 1.5rem;
+}
+
 <div
   class="modal-dialog"
   data-testid="modal-test"
@@ -49,7 +54,7 @@ exports[`Modal should render correctly when isLoading 1`] = `
         <div>
           <svg
             aria-hidden="true"
-            class="svg-inline--fa fa-spinner fa-spin fa-sm  css-1vbona3"
+            class="svg-inline--fa fa-spinner fa-spin fa-sm  emotion-0"
             data-icon="spinner"
             data-prefix="fas"
             focusable="false"

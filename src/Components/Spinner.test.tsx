@@ -1,5 +1,9 @@
 import { render } from "@testing-library/react";
 import Spinner from "./Spinner";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
+
 describe("Spinner", () => {
   const sizes: ("xs" | "sm" | "lg")[] = ["xs", "sm", "lg"];
   describe("should render correctly", () => {

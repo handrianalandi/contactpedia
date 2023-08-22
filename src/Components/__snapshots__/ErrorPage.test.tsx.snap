@@ -1,31 +1,77 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ErrorPage should render correctly 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.emotion-1 {
+  width: 50vw;
+  max-width: 250px;
+}
+
+.emotion-2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  font-style: italic;
+  text-align: center;
+}
+
+.emotion-3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  text-align: center;
+}
+
+.emotion-4 {
+  color: #06ba63;
+}
+
 <div>
   <div
-    class="css-15228ja"
+    class="emotion-0"
   >
     <img
       alt="Error"
-      class="css-30l6hb"
+      class="emotion-1"
       src="error-vector.png"
     />
     <h2
-      class="css-nyxvcy"
+      class="emotion-2"
     >
       Oops! Something went wrong.
     </h2>
     <p
-      class="css-g6iv93"
+      class="emotion-3"
     >
-      Please 
+      Please
+       
       <a
-        class="css-1skq4v4"
+        class="emotion-4"
         href="/"
       >
         refresh
       </a>
-       this page or try again later
+       
+      this page or try again later
     </p>
     <button
       class="btn btn-primary"

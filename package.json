@@ -61,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@emotion/jest": "^11.11.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "eslint": "^8.47.0",
     "eslint-config-standard-with-typescript": "^37.0.0",

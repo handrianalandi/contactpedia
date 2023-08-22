@@ -1,15 +1,126 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ContactCard should render correctly 1`] = `
+.emotion-0 {
+  -webkit-flex: 0 0 100%;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  border: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-radius: 15px;
+  padding: 10px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background: white;
+  color: #000;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-transition: 0.5s linear;
+  transition: 0.5s linear;
+  cursor: pointer;
+}
+
+.emotion-0:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-transition: 0.5s linear;
+  transition: 0.5s linear;
+}
+
+@media (min-width: 768px) {
+  .emotion-0 {
+    -webkit-flex: 0 0 45%;
+    -ms-flex: 0 0 45%;
+    flex: 0 0 45%;
+  }
+}
+
+@media (min-width: 992px) {
+  .emotion-0 {
+    -webkit-flex: 0 0 30%;
+    -ms-flex: 0 0 30%;
+    flex: 0 0 30%;
+  }
+}
+
+.emotion-1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.emotion-2 {
+  -webkit-flex: 0 0 90%;
+  -ms-flex: 0 0 90%;
+  flex: 0 0 90%;
+}
+
+.emotion-3 {
+  color: green;
+}
+
+.emotion-5 {
+  z-index: 2;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: end;
+  justify-content: end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 0 0 10%;
+  -ms-flex: 0 0 10%;
+  flex: 0 0 10%;
+}
+
+.emotion-6 {
+  -webkit-flex: auto;
+  -ms-flex: auto;
+  flex: auto;
+  width: 100%;
+  height: 0;
+  visibility: hidden;
+  border-top: 1px solid #ccc;
+  padding-top: 0;
+  margin-top: 0;
+  -webkit-transition: height 0.2s linear,padding 0.2s linear,margin 0.2s linear,visibility 0.1s linear;
+  transition: height 0.2s linear,padding 0.2s linear,margin 0.2s linear,visibility 0.1s linear;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-around;
+  -ms-flex-pack: space-around;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+}
+
 <div>
   <div
-    class="css-xxqley"
+    class="emotion-0"
   >
     <div
-      class="css-12r01ot"
+      class="emotion-1"
     >
       <div
-        class="css-1g4ize8"
+        class="emotion-2"
       >
         <div>
           <b>
@@ -22,9 +133,10 @@ exports[`ContactCard should render correctly 1`] = `
           <span>
             Phone 
             1
-            : 
+            :
+             
             <a
-              class="css-13yf68b"
+              class="emotion-3"
               href="https://wa.me/628912398789"
               rel="noopener noreferrer"
               target="_blank"
@@ -36,9 +148,10 @@ exports[`ContactCard should render correctly 1`] = `
           <span>
             Phone 
             2
-            : 
+            :
+             
             <a
-              class="css-13yf68b"
+              class="emotion-3"
               href="https://wa.me/628987654321"
               rel="noopener noreferrer"
               target="_blank"
@@ -50,7 +163,7 @@ exports[`ContactCard should render correctly 1`] = `
         </div>
       </div>
       <div
-        class="css-114x0le"
+        class="emotion-5"
       >
         <svg
           aria-hidden="true"
@@ -72,7 +185,7 @@ exports[`ContactCard should render correctly 1`] = `
       </div>
     </div>
     <div
-      class="css-sns62v"
+      class="emotion-6"
     >
       <svg
         aria-hidden="true"
@@ -113,15 +226,126 @@ exports[`ContactCard should render correctly 1`] = `
 `;
 
 exports[`ContactCard should render correctly with favorite 1`] = `
+.emotion-0 {
+  -webkit-flex: 0 0 100%;
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  border: 1px solid #ccc;
+  border-top: 5px solid #06ba63;
+  border-radius: 15px;
+  padding: 10px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background: white;
+  color: #000;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-transition: 0.5s linear;
+  transition: 0.5s linear;
+  cursor: pointer;
+}
+
+.emotion-0:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-transition: 0.5s linear;
+  transition: 0.5s linear;
+}
+
+@media (min-width: 768px) {
+  .emotion-0 {
+    -webkit-flex: 0 0 45%;
+    -ms-flex: 0 0 45%;
+    flex: 0 0 45%;
+  }
+}
+
+@media (min-width: 992px) {
+  .emotion-0 {
+    -webkit-flex: 0 0 30%;
+    -ms-flex: 0 0 30%;
+    flex: 0 0 30%;
+  }
+}
+
+.emotion-1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.emotion-2 {
+  -webkit-flex: 0 0 90%;
+  -ms-flex: 0 0 90%;
+  flex: 0 0 90%;
+}
+
+.emotion-3 {
+  color: green;
+}
+
+.emotion-5 {
+  z-index: 2;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: end;
+  justify-content: end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex: 0 0 10%;
+  -ms-flex: 0 0 10%;
+  flex: 0 0 10%;
+}
+
+.emotion-6 {
+  -webkit-flex: auto;
+  -ms-flex: auto;
+  flex: auto;
+  width: 100%;
+  height: 0;
+  visibility: hidden;
+  border-top: 1px solid #ccc;
+  padding-top: 0;
+  margin-top: 0;
+  -webkit-transition: height 0.2s linear,padding 0.2s linear,margin 0.2s linear,visibility 0.1s linear;
+  transition: height 0.2s linear,padding 0.2s linear,margin 0.2s linear,visibility 0.1s linear;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-around;
+  -ms-flex-pack: space-around;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+}
+
 <div>
   <div
-    class="css-1o6w3t1"
+    class="emotion-0"
   >
     <div
-      class="css-12r01ot"
+      class="emotion-1"
     >
       <div
-        class="css-1g4ize8"
+        class="emotion-2"
       >
         <div>
           <b>
@@ -134,9 +358,10 @@ exports[`ContactCard should render correctly with favorite 1`] = `
           <span>
             Phone 
             1
-            : 
+            :
+             
             <a
-              class="css-13yf68b"
+              class="emotion-3"
               href="https://wa.me/628912398789"
               rel="noopener noreferrer"
               target="_blank"
@@ -148,9 +373,10 @@ exports[`ContactCard should render correctly with favorite 1`] = `
           <span>
             Phone 
             2
-            : 
+            :
+             
             <a
-              class="css-13yf68b"
+              class="emotion-3"
               href="https://wa.me/628987654321"
               rel="noopener noreferrer"
               target="_blank"
@@ -162,7 +388,7 @@ exports[`ContactCard should render correctly with favorite 1`] = `
         </div>
       </div>
       <div
-        class="css-114x0le"
+        class="emotion-5"
       >
         <svg
           aria-hidden="true"
@@ -184,7 +410,7 @@ exports[`ContactCard should render correctly with favorite 1`] = `
       </div>
     </div>
     <div
-      class="css-sns62v"
+      class="emotion-6"
     >
       <svg
         aria-hidden="true"

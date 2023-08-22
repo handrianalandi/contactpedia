@@ -2,6 +2,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import ContactCard from "./ContactCard";
 import { Contact } from "../Interfaces/Contact";
 import { MemoryRouter } from "react-router-dom";
+import { createSerializer } from "@emotion/jest";
+
+expect.addSnapshotSerializer(createSerializer());
+
 
 const mockedUsedNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
